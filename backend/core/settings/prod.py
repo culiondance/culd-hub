@@ -4,9 +4,9 @@ from core.settings.base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = ["hub.culiondance.org"]
+ALLOWED_HOSTS = ["hub.culiondance.org","culd-hub.fly.dev"]
 
-CSRF_TRUSTED_ORIGINS = ["https://hub.culiondance.org", "http://hub.culiondance.org"]
+CSRF_TRUSTED_ORIGINS = ["https://hub.culiondance.org", "http://hub.culiondance.org","https://culd=hub.fly.dev"]
 
 INSTALLED_APPS.extend(["whitenoise.runserver_nostatic"])
 

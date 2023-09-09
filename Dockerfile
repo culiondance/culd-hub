@@ -3,7 +3,7 @@ FROM python:3.9
 # Install curl, node, & yarn
 RUN apt-get -y install curl \
   && curl -sL https://deb.nodesource.com/setup_16.x | bash \
-  && apt-get install nodejs \
+  && apt-get -y install nodejs \
   && curl -o- -L https://yarnpkg.com/install.sh | bash
 
 WORKDIR /app/backend
@@ -21,6 +21,7 @@ RUN $HOME/.yarn/bin/yarn install
 # Add the rest of the code
 COPY . /app
 COPY ./backend/scripts/ /app/
+
 # Build static files
 RUN $HOME/.yarn/bin/yarn build
 
