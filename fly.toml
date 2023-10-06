@@ -17,3 +17,7 @@ console_command = "/backend/manage.py runserver 0.0.0.0:8080"
   auto_start_machines = true
   min_machines_running = 0
   processes = ["app"]
+
+[env]
+  DJANGO_SETTINGS_MODULE = "core.settings.prod"
+  EMAIL_HOST_USER = "columbiauniversityliondance@gmail.com"

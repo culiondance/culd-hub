@@ -2,7 +2,7 @@ import dj_database_url
 
 from core.settings.base import *
 
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ["hub.culiondance.org","culd-hub.fly.dev"]
 
