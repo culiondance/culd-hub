@@ -6,7 +6,7 @@ from django.db import models
 from django.utils.translation import gettext as _
 from model_utils import Choices
 from phonenumber_field.modelfields import PhoneNumberField
-
+from django.conf import settings
 from slack.models import SlackUser, SlackChannel
 
 # User = get_user_model()
@@ -68,8 +68,8 @@ class Member(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        self.fetch_slack_user()
-
+        if(settings.ENABLE_SLACK_INTEGRATION):
+            self.fetch_slack_user()
     def fetch_slack_user(self):
         """Fetch Slack user for member, creating one if necessary"""
         return SlackUser.objects.get_or_create(member=self)[0]
@@ -185,7 +185,7 @@ class Show(models.Model):
         ]
 
         super().save(*args, **kwargs)
-        if self.status > Show.STATUSES.draft:
+        if self.status > Show.STATUSES.draft and settings.ENABLE_SLACK_INTEGRATION:
             channel, created = self.fetch_slack_channel()
             if not channel.is_archived():
                 if created:
@@ -206,7 +206,7 @@ class Show(models.Model):
     def delete(self, *args, **kwargs):
         self.status = self.STATUSES.draft
         self.save()
-        if self.has_slack_channel() and not self.channel.is_archived():
+        if settings.ENABLE_SLACK_INTEGRATION and self.has_slack_channel() and not self.channel.is_archived():
             self.channel.archive(rename=True)
         super().delete(*args, **kwargs)
 
@@ -265,10 +265,14 @@ class Show(models.Model):
 
     @admin.display(description="Slack", boolean=True)
     def is_slack_channel_active(self):
-        return self.has_slack_channel() and not self.channel.is_archived()
+        if(settings.ENABLE_SLACK_INTEGRATION):
+            return self.has_slack_channel() and not self.channel.is_archived()
+        return False
 
     def has_slack_channel(self):
-        return hasattr(self, "channel")
+        if(settings.ENABLE_SLACK_INTEGRATION):
+            return hasattr(self, "channel")
+        return False
 
     def is_open(self):
         return self.STATUSES.draft < self.status < self.STATUSES.closed
@@ -327,14 +331,14 @@ class Role(models.Model):
     def save(self, *args, **kwargs):
         created = self._state.adding
         super().save(*args, **kwargs)
-        if created and hasattr(self.show, "channel"):
+        if settings.ENABLE_SLACK_INTEGRATION and created and hasattr(self.show, "channel"):
             slack_user = self.performer.fetch_slack_user()
             if slack_user is not None:
                 self.show.channel.invite_users(slack_user)
 
     def delete(self, *args, **kwargs):
         super().delete(*args, **kwargs)
-        if hasattr(self.show, "channel"):
+        if settings.ENABLE_SLACK_INTEGRATION and hasattr(self.show, "channel"):
             slack_user = self.performer.fetch_slack_user()
             if slack_user is not None:
                 self.show.channel.remove_users(slack_user)
