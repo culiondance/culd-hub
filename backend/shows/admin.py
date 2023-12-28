@@ -1,5 +1,5 @@
 from django.contrib import admin
-
+from django.conf import settings
 from shows.models import Show, Round, Member, Contact, Role
 
 
@@ -13,16 +13,18 @@ class RoleInlineAdmin(admin.TabularInline):
 
 @admin.action(description="Refresh show Slack channels")
 def refresh_channels(modeladmin, request, queryset):
-    for show in queryset:
-        if show.has_slack_channel:
-            show.channel.force_refresh()
+    if(settings.ENABLE_SLACK_INTEGRATION):
+        for show in queryset:
+            if show.has_slack_channel:
+                show.channel.force_refresh()
 
 
 @admin.action(description="Archive show Slack channels")
 def archive_channels(modeladmin, request, queryset):
-    for show in queryset:
-        if show.has_slack_channel:
-            show.channel.archive(rename=False)
+    if(settings.ENABLE_SLACK_INTEGRATION):
+        for show in queryset:
+            if show.has_slack_channel:
+                show.channel.archive(rename=False)
 
 
 class ShowAdmin(admin.ModelAdmin):
@@ -47,6 +49,8 @@ class ShowAdmin(admin.ModelAdmin):
         "rate",
         "payment_method",
     ]
+    if(not settings.ENABLE_SLACK_INTEGRATION):
+        list_display.remove("is_slack_channel_active")
     empty_value_display = "TBD"
 
     inlines = [RoundInlineAdmin, RoleInlineAdmin]
