@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.9-alpine
+FROM python:3.9-alpine AS setup
 
 # Adding backend directory to make absolute filepaths consistent across services
 WORKDIR /app/backend
@@ -15,6 +15,7 @@ RUN  \
     pip3 install --upgrade pip -r requirements.txt && \
     apk --purge del .build-deps
 
+FROM setup AS build
 # Add the rest of the code
 COPY . /app/backend
 COPY ./scripts/ /app/

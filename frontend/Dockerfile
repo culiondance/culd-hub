@@ -1,5 +1,5 @@
 # Use an official Node runtime as a parent image
-FROM node:18-alpine
+FROM node:18-alpine AS setup
 
 WORKDIR /app/
 
@@ -8,6 +8,7 @@ COPY package.json yarn.lock /app/
 
 RUN yarn
 
+FROM setup AS run
 # Add rest of the client code
 COPY . /app/
 
