@@ -27,3 +27,12 @@ db_from_env = dj_database_url.config(
     default=DATABASE_URL, conn_max_age=0, ssl_require=False
 )
 DATABASES["default"].update(db_from_env)
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", default=None)
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default=None)
+DEFAULT_FROM_EMAIL = "CU Lion Dance"
+

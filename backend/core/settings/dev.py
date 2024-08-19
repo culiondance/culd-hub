@@ -21,3 +21,5 @@ if os.environ.get("DEVELOPMENT_DATABASE") == "postgres":
             "PORT": 5432,
         }
     }
+
+EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"

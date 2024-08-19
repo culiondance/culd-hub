@@ -13,6 +13,9 @@ services:
     environment:
       - DJANGO_SETTINGS_MODULE=core.settings.dev
       - DEVELOPMENT_DATABASE=postgres
+      - DJANGO_SUPERUSER_EMAIL=admin@a.io
+      - DJANGO_SUPERUSER_FIRST_NAME=admin
+      - DJANGO_SUPERUSER_LAST_NAME=admin
   frontend:
     build: ./frontend
     volumes:
