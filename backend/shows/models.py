@@ -149,7 +149,7 @@ class Show(models.Model):
     )
     notes = models.TextField(blank=True, verbose_name="notes")
     rate = models.DecimalField(
-        blank=True, null=True, decimal_places=2, max_digits=10, verbose_name="rate"
+        blank=True, null=True, decimal_places=2, max_digits=10, verbose_name="Show Fee"
     )
     payment_method = models.PositiveSmallIntegerField(
         choices=PAYMENT_METHODS,
@@ -158,6 +158,8 @@ class Show(models.Model):
         default=None,
         verbose_name="payment method",
     )
+
+    paid = models.BooleanField(default=False, verbose_name="Paid")
 
     class Meta:
         ordering = ["date", "time"]

@@ -27,7 +27,7 @@ BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "../../"))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
-SECRET_KEY = env("SECRET_KEY", default=get_random_secret_key())
+SECRET_KEY = env("SECRET_KEY", default="abc123")
 
 # Application definition
 

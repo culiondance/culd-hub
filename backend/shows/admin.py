@@ -37,16 +37,16 @@ class ShowAdmin(admin.ModelAdmin):
         "name",
         "status",
         "is_slack_channel_active",
-        "priority",
         "day_of_week",
         "date",
+        "rate",
+        "paid",
         "formatted_time",
         "lions",
         "performer_count",
         "rounds",
         "address",
         "notes",
-        "rate",
         "payment_method",
     ]
     if(not settings.ENABLE_SLACK_INTEGRATION):

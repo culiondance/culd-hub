@@ -16,6 +16,7 @@ services:
       - DJANGO_SUPERUSER_EMAIL=admin@a.io
       - DJANGO_SUPERUSER_FIRST_NAME=admin
       - DJANGO_SUPERUSER_LAST_NAME=admin
+      - DJANGO_SUPERUSER_PASSWORD=admin
   frontend:
     build: ./frontend
     volumes:
