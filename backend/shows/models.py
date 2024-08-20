@@ -148,8 +148,8 @@ class Show(models.Model):
         choices=PRIORITIES, default=PRIORITIES.normal
     )
     notes = models.TextField(blank=True, verbose_name="notes")
-    rate = models.DecimalField(
-        blank=True, null=True, decimal_places=2, max_digits=10, verbose_name="Show Fee"
+    rate = models.PositiveIntegerField(
+        blank=True, null=True, verbose_name="Show Fee"
     )
     payment_method = models.PositiveSmallIntegerField(
         choices=PAYMENT_METHODS,
@@ -249,13 +249,14 @@ class Show(models.Model):
         date = self.date.strftime("%m-%d")
         return f"{date}-{name.replace(' ', '-').lower()}"
 
-    @admin.display(description="Day of Week")
-    def day_of_week(self):
-        return self.date.strftime("%a").upper() if self.date else None
+    @admin.display(description="rate", ordering="rate")
+    def rate_dollars(self):
+        return f"${self.rate}"
+
 
     @admin.display(description="Date", ordering="date")
-    def formatted_date(self, fmt="%m/%d"):
-        return self.date.strftime(fmt) if self.date else None
+    def formatted_date(self):
+        return self.date.strftime("%a, %m/%d")
 
     @admin.display(description="Time", ordering="time")
     def formatted_time(self, fmt="%-I:%M %p"):
