@@ -16,6 +16,7 @@ import django
 import environ
 from django.core.management.utils import get_random_secret_key
 from django.utils.encoding import force_str
+from django.conf.urls.static import static
 
 django.utils.encoding.force_text = force_str
 
@@ -75,6 +76,11 @@ GRAPHQL_JWT = {
     "JWT_REFRESH_EXPIRATION_DELTA": timedelta(days=7),
 }
 
+
+MEDIA_ROOT = "./receipts"
+
+MEDIA_URL = "receipts/"
+
 ROOT_URLCONF = "core.urls"
 
 TEMPLATES = [
@@ -94,6 +100,7 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "core.wsgi.application"
+
 
 # Database
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
