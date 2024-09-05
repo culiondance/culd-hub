@@ -1,6 +1,11 @@
 from django.contrib import admin
-from django.conf import settings
-from reimbs.models import Reimbursment
+from reimbs.models import Reimbursement
+
+@admin.action(description="Mark a Reimbursement Request as Completed")
+def mark_complete(modeladmin, request, queryset):
+    for reimb in queryset:
+        reimb.mark_completed()
+
 
 class ReimbursementAdmin(admin.ModelAdmin):
     list_display = [
@@ -14,9 +19,5 @@ class ReimbursementAdmin(admin.ModelAdmin):
 
     actions = [mark_complete]
 
-@admin.action(description="Mark a Reimbursement Request as Completed")
-def mark_complete(modeladmin, request, queryset):
-    for reimb in queryset:
-        reimb.mark_completed()
 
-admin.site.register(ReimbursementAdmin)
+admin.site.register(Reimbursement, ReimbursementAdmin)
