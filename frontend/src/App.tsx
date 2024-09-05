@@ -2,6 +2,7 @@ import "./App.css";
 import React from "react";
 import {Route, Routes} from "react-router-dom";
 import ShowsPage from "./pages/ShowsPage";
+import ReimbPage from "./pages/ReimbPage";
 import ProfilePage from "./pages/ProfilePage";
 import PrivateRoutes from "./components/PrivateRoutes";
 import {AuthProvider} from "./context/AuthContext";
@@ -26,6 +27,7 @@ function App() {
                     <Route element={<PrivateRoutes/>}>
                         <Route path="/" element={<ShowsPage/>}/>
                         <Route path="profile/" element={<ProfilePage/>}/>
+                        <Route path="reimb/" element={<ReimbPage/>}/>
                     </Route>
                     <Route path="login/" element={<LoginPage/>}/>
                     <Route path="signup/" element={<SignupPage/>}/>

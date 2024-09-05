@@ -6,6 +6,7 @@ import {
     LogoutOutlined,
     SettingFilled,
     SmileOutlined,
+    RedEnvelopeFilled,
 } from "@ant-design/icons";
 import {AuthContext} from "../../context/AuthContext";
 import {UserContext} from "../../context/UserContext";
@@ -32,6 +33,11 @@ const Navigation: React.FC<Props> = ({newUserTooltip}: Props) => {
             key: "home",
             icon: <HomeFilled/>,
         },
+        user && {
+          label: (<Link to="/reimb">Reimbursement</Link>),
+          key: "reimb",
+          icon: <RedEnvelopeFilled/>,
+        },
         {
             label: <a href="/admin/" target="_blank">Admin</a>,
             key: "admin",
@@ -55,6 +61,7 @@ const Navigation: React.FC<Props> = ({newUserTooltip}: Props) => {
             icon: <SmileOutlined/>,
             style: {marginLeft: "auto"},
         },
+
         authTokens && {
             label: <Link to="/">Logout</Link>,
             key: "logout",
