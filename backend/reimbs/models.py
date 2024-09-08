@@ -1,5 +1,6 @@
 from django.contrib.postgres.fields import ArrayField 
 from django.db import models
+from django import FileSystemStorage
 
 class Reimbursement(models.Model):
 
@@ -24,7 +25,7 @@ class Reimbursement(models.Model):
     def mark_completed(self):
         if not self.completed:
             self.delete_receipts()
-            self.completed = true
+            self.completed = True
             super().save()
 
     def delete_receipts(self):

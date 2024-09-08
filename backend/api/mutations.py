@@ -10,7 +10,9 @@ from users.mixins import (
     UpdatePasswordMixin,
 )
 from .bases import DynamicArgsMixin
-from .types import RoleType
+from .types import RoleType, ReimbursementType
+
+from reimbs.models import Reimbursement
 
 
 class CreateRoleMutation(graphene.Mutation):
@@ -43,6 +45,20 @@ class DeleteRoleMutation(graphene.Mutation):
         )
         role_instance.delete()
         return DeleteRoleMutation(role=role_instance)
+
+class CompleteReimbMutation(graphene.Mutation):
+    role = graphene.Field(ReimbursementType)
+
+    class Arguments:
+        id = graphene.ID(required = True)
+
+    @staticmethod
+    def mutate(id):
+        reimbursement = Reimbursement.objects.get(pk = id)
+        reimbursement.mark_completed()
+        reimbursement.save()
+        return CompleteReimbMutation(id = id)
+
 
 
 class RegisterMutation(DynamicArgsMixin, RegisterMixin, graphene.Mutation):
