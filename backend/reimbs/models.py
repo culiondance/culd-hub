@@ -1,6 +1,6 @@
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
-from django import FileSystemStorage
+from django.core.files.storage import FileSystemStorage
 
 
 class Reimbursement(models.Model):

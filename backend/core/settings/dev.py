@@ -1,4 +1,5 @@
 import os
+from core.settings.base import *
 
 
 # Quick-start development settings - unsuitable for production

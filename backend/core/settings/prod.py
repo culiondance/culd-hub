@@ -1,13 +1,9 @@
 import dj_database_url
 import os
 import environ
-from core.settings.base import (
-    INSTALLED_APPS,
-    MIDDLEWARE,
-    TEMPLATES,
-    BASE_DIR,
-    DATABASES,
-)
+
+from core.settings.base import *
+
 
 
 env = environ.Env()
