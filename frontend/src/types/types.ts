@@ -47,3 +47,12 @@ export type Contact = {
     phone: string,
     email: string
 }
+
+export type Reimbursement = {
+    user: Member,
+    showk: Show,
+    Amount: number,
+    date: Dayjs
+    Receipts: string[],
+    Completed: boolean,
+}

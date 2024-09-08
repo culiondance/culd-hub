@@ -1,4 +1,7 @@
+import ../../../types/Reimbursement
+
 export interface ShowContextInterface {
-    reimbs: Reimb[],
+    reimbs: Reimbursement[],
     needsRefresh: boolean,
 }
+
