@@ -18,7 +18,7 @@ from .mutations import (
     UpdateProfileMutation,
     UpdatePasswordMutation,
 )
-from .types import UserType, MemberType, ShowType
+from .types import UserType, MemberType, ShowType, ReimbursementType
 
 
 @receiver(refresh_token_rotated)
@@ -35,6 +35,7 @@ class Query(graphene.ObjectType):
     members = graphene.List(MemberType)
     shows = graphene.List(ShowType)
     me = graphene.Field(UserType)
+    reimbs = graphene.List(ReimbursementType)
 
     school_choices = graphene.String()
     class_year_choices = graphene.String()

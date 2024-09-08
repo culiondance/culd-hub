@@ -6,6 +6,7 @@ from graphene_django.utils import camelize
 from common.exceptions import WrongUsage
 from shows.models import Member, Show, Round, Contact, Role
 from users.models import User
+from reimbs.models import Reimbursement
 
 
 class UserType(DjangoObjectType):
@@ -59,6 +60,11 @@ class ShowType(DjangoObjectType):
 
     def resolve_is_pending(self, info):
         return self.pending  # noqa
+
+class ReimbursementType(DjangoObjectType):
+    class Meta:
+        model = Reimbursement
+        fields = ("id", "user", "show", "amount", "date", "receipts", "completed")
 
 
 class RoundType(DjangoObjectType):
