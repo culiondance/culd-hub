@@ -1,6 +1,7 @@
 from django.contrib import admin
 from reimbs.models import Reimbursement
 
+
 @admin.action(description="Mark a Reimbursement Request as Completed")
 def mark_complete(modeladmin, request, queryset):
     for reimb in queryset:

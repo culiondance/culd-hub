@@ -61,6 +61,7 @@ class ShowType(DjangoObjectType):
     def resolve_is_pending(self, info):
         return self.pending  # noqa
 
+
 class ReimbursementType(DjangoObjectType):
     class Meta:
         model = Reimbursement

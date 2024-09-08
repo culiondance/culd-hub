@@ -1,12 +1,27 @@
 import dj_database_url
+import os
+import environ
+from core.settings.base import (
+    INSTALLED_APPS,
+    MIDDLEWARE,
+    TEMPLATES,
+    BASE_DIR,
+    DATABASES,
+)
 
-from core.settings.base import *
+
+env = environ.Env()
+environ.Env.read_env()
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["hub.culiondance.org","culd-hub.fly.dev"]
+ALLOWED_HOSTS = ["hub.culiondance.org", "culd-hub.fly.dev"]
 
-CSRF_TRUSTED_ORIGINS = ["https://hub.culiondance.org", "http://hub.culiondance.org","https://culd=hub.fly.dev"]
+CSRF_TRUSTED_ORIGINS = [
+    "https://hub.culiondance.org",
+    "http://hub.culiondance.org",
+    "https://culd=hub.fly.dev",
+]
 
 INSTALLED_APPS.extend(["whitenoise.runserver_nostatic"])
 
@@ -35,4 +50,3 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = env("EMAIL_HOST_USER", default=None)
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default=None)
 DEFAULT_FROM_EMAIL = "CU Lion Dance"
-

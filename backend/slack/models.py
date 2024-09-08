@@ -185,14 +185,13 @@ class SlackChannel(models.Model):
     def send_or_update_briefing(self):
         """Sends show briefing to Slack channel, or updates existing briefing."""
 
-        name, date, time, point, lions, address, notes = (
+        name, date, time, point, lions, address = (
             self.show.name,
             self.show.formatted_date(),
             self.show.formatted_time(),
             self.show.point,
             self.show.lions,
             self.show.address,
-            self.show.notes,
         )
 
         if point is not None:

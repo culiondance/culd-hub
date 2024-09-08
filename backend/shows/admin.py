@@ -13,7 +13,7 @@ class RoleInlineAdmin(admin.TabularInline):
 
 @admin.action(description="Refresh show Slack channels")
 def refresh_channels(modeladmin, request, queryset):
-    if(settings.ENABLE_SLACK_INTEGRATION):
+    if settings.ENABLE_SLACK_INTEGRATION:
         for show in queryset:
             if show.has_slack_channel:
                 show.channel.force_refresh()
@@ -21,7 +21,7 @@ def refresh_channels(modeladmin, request, queryset):
 
 @admin.action(description="Archive show Slack channels")
 def archive_channels(modeladmin, request, queryset):
-    if(settings.ENABLE_SLACK_INTEGRATION):
+    if settings.ENABLE_SLACK_INTEGRATION:
         for show in queryset:
             if show.has_slack_channel:
                 show.channel.archive(rename=False)
@@ -48,7 +48,7 @@ class ShowAdmin(admin.ModelAdmin):
         "notes",
         "payment_method",
     ]
-    if(not settings.ENABLE_SLACK_INTEGRATION):
+    if not settings.ENABLE_SLACK_INTEGRATION:
         list_display.remove("is_slack_channel_active")
     empty_value_display = "TBD"
 

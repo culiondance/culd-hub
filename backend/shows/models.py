@@ -68,8 +68,9 @@ class Member(models.Model):
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        if(settings.ENABLE_SLACK_INTEGRATION):
+        if settings.ENABLE_SLACK_INTEGRATION:
             self.fetch_slack_user()
+
     def fetch_slack_user(self):
         """Fetch Slack user for member, creating one if necessary"""
         return SlackUser.objects.get_or_create(member=self)[0]
@@ -148,9 +149,7 @@ class Show(models.Model):
         choices=PRIORITIES, default=PRIORITIES.normal
     )
     notes = models.TextField(blank=True, verbose_name="notes")
-    rate = models.PositiveIntegerField(
-        blank=True, null=True, verbose_name="Show Fee"
-    )
+    rate = models.PositiveIntegerField(blank=True, null=True, verbose_name="Show Fee")
     payment_method = models.PositiveSmallIntegerField(
         choices=PAYMENT_METHODS,
         null=True,
@@ -208,7 +207,11 @@ class Show(models.Model):
     def delete(self, *args, **kwargs):
         self.status = self.STATUSES.draft
         self.save()
-        if settings.ENABLE_SLACK_INTEGRATION and self.has_slack_channel() and not self.channel.is_archived():
+        if (
+            settings.ENABLE_SLACK_INTEGRATION
+            and self.has_slack_channel()
+            and not self.channel.is_archived()
+        ):
             self.channel.archive(rename=True)
         super().delete(*args, **kwargs)
 
@@ -253,7 +256,6 @@ class Show(models.Model):
     def rate_dollars(self):
         return f"${self.rate}"
 
-
     @admin.display(description="Date", ordering="date")
     def formatted_date(self):
         return self.date.strftime("%a, %m/%d")
@@ -268,12 +270,12 @@ class Show(models.Model):
 
     @admin.display(description="Slack", boolean=True)
     def is_slack_channel_active(self):
-        if(settings.ENABLE_SLACK_INTEGRATION):
+        if settings.ENABLE_SLACK_INTEGRATION:
             return self.has_slack_channel() and not self.channel.is_archived()
         return False
 
     def has_slack_channel(self):
-        if(settings.ENABLE_SLACK_INTEGRATION):
+        if settings.ENABLE_SLACK_INTEGRATION:
             return hasattr(self, "channel")
         return False
 
@@ -334,7 +336,11 @@ class Role(models.Model):
     def save(self, *args, **kwargs):
         created = self._state.adding
         super().save(*args, **kwargs)
-        if settings.ENABLE_SLACK_INTEGRATION and created and hasattr(self.show, "channel"):
+        if (
+            settings.ENABLE_SLACK_INTEGRATION
+            and created
+            and hasattr(self.show, "channel")
+        ):
             slack_user = self.performer.fetch_slack_user()
             if slack_user is not None:
                 self.show.channel.invite_users(slack_user)

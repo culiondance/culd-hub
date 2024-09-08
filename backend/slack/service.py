@@ -459,7 +459,7 @@ class SlackBoss:
         elif member is not None:
             if member.user:
                 return member.user.email, str(member)
-            raise SlackBossException(f"Member does not have an associated user")
+            raise SlackBossException("Member does not have an associated user")
         raise WrongUsage("At least one of email, user, or member must be specified")
 
     @staticmethod

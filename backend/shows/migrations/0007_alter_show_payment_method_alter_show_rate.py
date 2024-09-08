@@ -4,7 +4,6 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ("shows", "0006_show_payment_method_show_rate_alter_show_notes"),
     ]

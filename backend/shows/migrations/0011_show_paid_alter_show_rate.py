@@ -4,20 +4,25 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shows', '0010_remove_show_paid_alter_show_rate'),
+        ("shows", "0010_remove_show_paid_alter_show_rate"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='show',
-            name='paid',
-            field=models.BooleanField(default=False, verbose_name='Paid'),
+            model_name="show",
+            name="paid",
+            field=models.BooleanField(default=False, verbose_name="Paid"),
         ),
         migrations.AlterField(
-            model_name='show',
-            name='rate',
-            field=models.DecimalField(blank=True, decimal_places=2, max_digits=10, null=True, verbose_name='Show Fee'),
+            model_name="show",
+            name="rate",
+            field=models.DecimalField(
+                blank=True,
+                decimal_places=2,
+                max_digits=10,
+                null=True,
+                verbose_name="Show Fee",
+            ),
         ),
     ]

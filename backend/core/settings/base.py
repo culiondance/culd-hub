@@ -9,14 +9,13 @@ https://docs.djangoproject.com/en/4.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.0/ref/settings/
 """
+
 import os
 from datetime import timedelta
 
 import django
 import environ
-from django.core.management.utils import get_random_secret_key
 from django.utils.encoding import force_str
-from django.conf.urls.static import static
 
 django.utils.encoding.force_text = force_str
 
@@ -182,14 +181,4 @@ PASSWORD_RESET_TIMEOUT_DAYS = 1
 
 SLACK_TOKEN = env("SLACK_TOKEN", default=None)
 
-'''
-moved to prod.py so dev.py can have a dummy backend
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
-EMAIL_USE_TLS = True
-EMAIL_PORT = 587
-EMAIL_HOST_USER = env("EMAIL_HOST_USER", default=None)
-EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", default=None)
-DEFAULT_FROM_EMAIL = "CU Lion Dance"
-'''
 ENABLE_SLACK_INTEGRATION = False

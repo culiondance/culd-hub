@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('shows', '0008_show_paid_alter_show_rate'),
+        ("shows", "0008_show_paid_alter_show_rate"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='show',
-            name='paid',
-            field=models.BooleanField(default=False, verbose_name='Paid'),
+            model_name="show",
+            name="paid",
+            field=models.BooleanField(default=False, verbose_name="Paid"),
         ),
     ]
