@@ -36,7 +36,7 @@ class Query(graphene.ObjectType):
     shows = graphene.List(ShowType)
     me = graphene.Field(UserType)
     reimbs = graphene.List(ReimbursementType)
-    my_reimbs = graphene.Field(ReimbursementType, user = graphene.String())
+    my_reimbs = graphene.List(ReimbursementType, user = graphene.String())
 
     school_choices = graphene.String()
     class_year_choices = graphene.String()
