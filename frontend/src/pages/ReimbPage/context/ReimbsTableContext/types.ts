@@ -1,7 +1,9 @@
-import ../../../types/Reimbursement
+import { Reimbursement }from "../../../../types/types";
+import {createContext} from "react";
 
-export interface ShowContextInterface {
+export const ReimbTableContext = createContext(undefined)
+
+export interface ReimbTableContextInterface {
     reimbs: Reimbursement[],
-    needsRefresh: boolean,
 }
 

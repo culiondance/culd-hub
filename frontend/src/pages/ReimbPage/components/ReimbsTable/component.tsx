@@ -1,37 +1,47 @@
-import {Button, Modal, Progress, Space, Table, Tag, Tooltip} from "antd";
+import {React, useContext} from "react";
+import {Button, Modal, Progress, Space, Table, Tag, Tooltip, Image} from "antd";
+import {
+    CheckSquareFilled,
+    ClockCircleOutlined,
+    InfoCircleOutlined,
+    InfoCircleTwoTone,
+    PlusOutlined,
+    StarFilled,
+    WarningFilled
+} from "@ant-design/icons";
 import dayjs, {Dayjs} from "dayjs";
 
-import {Show} from "../../../../types/types";
+import ShowDetails from "../../../ShowsPage/components/ShowDetails";
+import {Show, User} from "../../../../types/types";
 
 
-import {ReimbTableContextInterface} from "../../context/ReimbsTableContext/types";
-import {ReimbTableContext} from "../../context/ReimbsTableContext";
+import {ReimbTableContextInterface, ReimbTableContext} from "../../context/ReimbsTableContext/types";
 
 const ReimbsTable = ({user}: { user: User }) => {
 
+
     const {
-        reimbs
-        needsRefresh
-    }: ReimbContextInterface = useContext(ReimbsTableContext)
+        reimbs,
+    }: ReimbTableContextInterface = useContext(ReimbTableContext)
 
     const columns = [
         {
             title: "completed",
-            key:"",
-            dataIndex: "completed"
-            render: (completed:bool) => {completed? (<Icon type="check-square"/>) : <Icon type="clock-circle" />},
+            key:"completed",
+            dataIndex: "completed",
+            render: (completed:boolean) => {completed? (<CheckSquareFilled/>) : <ClockCircleOutlined/>},
         },
         {
-            title: "date"
+            title: "date",
             key:"date",
-            dataIndex: "date"
+            dataIndex: "date",
             render: (date: Dayjs) => (date ? date.format("ddd, MMM DD") : ""),
             sorter: (a, b) => a.date?.diff(b.date),
         },
         {
-            title:"show"
-            key:"name",
-            dataIndex: "name"
+            title:"show",
+            key:"show",
+            dataIndex: "name",
             render: (show: Show) => {return (<>
                 <span style={{
                     fontSize: "1.05em",
@@ -53,29 +63,30 @@ const ReimbsTable = ({user}: { user: User }) => {
                         }}
                     />
                 </Tooltip>
-            }
+            </>)}
         },
         {
-            title:"amount"
+            title:"amount",
             key:"amount",
-            dataIndex: "amount"
-            render:(amount) => {return ("$" + amount.toFixed(2))},
+            dataIndex: "amount",
+            render:(amount) => {return <span style={{
+                    fontSize: "1.05em",
+                    marginRight: "8px"
+                }}>("$" + amount.toFixed(2))</span>
+            },
         },
         {
-            title:"receipts"
+            title:"receipts",
             key:"receipts",
-            dataIndex: "receipts"
-            render: "todo",
+            dataIndex: "receipts",
+            render: (urls: String[]) => {return(
+                <Image>
+                </Image>
+            )}
         },
-    ]
+    ];
 
 
 
-    return view == Views.TABLE && <Table
-        columns={columns}
-        dataSource={reimbs}
-        size="middle"
-        loading={needsRefresh}
-        pagination={false}
-    />;
+    return <Table dataSource={reimbs} columns={columns}/>;
 }

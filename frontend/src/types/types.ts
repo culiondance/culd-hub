@@ -50,9 +50,9 @@ export type Contact = {
 
 export type Reimbursement = {
     user: Member,
-    showk: Show,
-    Amount: number,
+    show: Show,
+    amount: number,
     date: Dayjs
-    Receipts: string[],
-    Completed: boolean,
+    receipts: string[],
+    completed: boolean,
 }
