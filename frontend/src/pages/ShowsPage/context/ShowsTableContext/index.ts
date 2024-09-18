@@ -1,2 +1,2 @@
-export {default} from "./context";
-export {ShowsTableProvider} from "./context";
+export { default } from "./context";
+export { ShowsTableProvider } from "./context";

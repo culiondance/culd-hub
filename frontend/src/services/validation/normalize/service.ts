@@ -1,17 +1,16 @@
 import parsePhoneNumber from "libphonenumber-js";
 
-export const toLowerCase = (str: string): string =>
-    (str || "").toLowerCase();
+export const toLowerCase = (str: string): string => (str || "").toLowerCase();
 
 export const toTitleCase = (str: string): string =>
-    str && str.toLowerCase().replace(/^(.)|\s(.)/g,
-        ($1) => $1.toUpperCase()
-    );
+  str && str.toLowerCase().replace(/^(.)|\s(.)/g, ($1) => $1.toUpperCase());
 
 export const formatPhoneNumber = (str: string): string => {
-    if (str) {
-        const phoneNumber = parsePhoneNumber(str);
-        return (phoneNumber.country === "US") ? phoneNumber.formatNational() : phoneNumber.formatInternational();
-    }
-    return "";
+  if (str) {
+    const phoneNumber = parsePhoneNumber(str);
+    return phoneNumber.country === "US"
+      ? phoneNumber.formatNational()
+      : phoneNumber.formatInternational();
+  }
+  return "";
 };
