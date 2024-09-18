@@ -19,8 +19,8 @@ interface Props {
     children: React.ReactNode[]
 }
 
-// TODO: delete Reimbursement
-export const ReimbsTableProvider: React.FC<Props> = ({children} : Props) => {
+// TODO: way to delete Reimbursement
+export const ReimbTableProvider: React.FC<Props> = ({children} : Props) => {
     const {logoutUser} = useContext(AuthContext);
     const {user}: { user: User } = useContext(UserContext);
     const id = user.id;
@@ -37,11 +37,11 @@ export const ReimbsTableProvider: React.FC<Props> = ({children} : Props) => {
     });
 
 
-    const context:ReimbTableContextInterface = {
+    const data:ReimbTableContextInterface = {
         reimbs:Reimbs,
     }
 
-    return <ReimbTableContext.Provider value={context}>
+    return <ReimbTableContext.Provider value={data}>
             {children}
         </ReimbTableContext.Provider>
 }

@@ -1,5 +1,6 @@
-import {React, useContext} from "react";
+import React, {useContext} from "react";
 import {Button, Modal, Progress, Space, Table, Tag, Tooltip, Image} from "antd";
+import { ColumnProps } from 'antd/es/table';
 import {
     CheckSquareFilled,
     ClockCircleOutlined,
@@ -15,7 +16,7 @@ import ShowDetails from "../../../ShowsPage/components/ShowDetails";
 import {Show, User} from "../../../../types/types";
 
 
-import {ReimbTableContextInterface, ReimbTableContext} from "../../context/ReimbsTableContext/types";
+import {ReimbTableContextInterface, ReimbTableContext} from "../../context/ReimbTableContext/types";
 
 const ReimbsTable = ({user}: { user: User }) => {
 
@@ -24,19 +25,19 @@ const ReimbsTable = ({user}: { user: User }) => {
         reimbs,
     }: ReimbTableContextInterface = useContext(ReimbTableContext)
 
+
     const columns = [
         {
             title: "completed",
             key:"completed",
             dataIndex: "completed",
-            render: (completed:boolean) => {completed? (<CheckSquareFilled/>) : <ClockCircleOutlined/>},
+            render: (completed:boolean) => {return (completed? (<CheckSquareFilled/>) : <ClockCircleOutlined/>)},
         },
         {
             title: "date",
             key:"date",
             dataIndex: "date",
-            render: (date: Dayjs) => (date ? date.format("ddd, MMM DD") : ""),
-            sorter: (a, b) => a.date?.diff(b.date),
+            render: (date: Dayjs) => {return (date ? date.format("ddd, MMM DD") : "")},
         },
         {
             title:"show",
