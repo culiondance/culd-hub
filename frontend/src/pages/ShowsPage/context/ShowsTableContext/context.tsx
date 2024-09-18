@@ -28,8 +28,6 @@ interface Props {
   children: React.ReactNode[];
 }
 
-// I hate react so much wtf is this
-// I think the Context is like the functions we use elsewhere?
 export const ShowsTableProvider: React.FC<Props> = ({ children }: Props) => {
   const { logoutUser } = useContext(AuthContext);
   const { user }: { user: User } = useContext(UserContext);

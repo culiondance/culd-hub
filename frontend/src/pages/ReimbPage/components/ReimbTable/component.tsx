@@ -29,7 +29,7 @@ import {
   ReimbTableContext,
 } from "../../context/ReimbTableContext/types";
 
-const ReimbsTable = ({ user }: { user: User }) => {
+const ReimbTable = ({ user }: { user: User }) => {
   const { reimbs }: ReimbTableContextInterface = useContext(ReimbTableContext);
 
   const columns = [
@@ -113,3 +113,5 @@ const ReimbsTable = ({ user }: { user: User }) => {
 
   return <Table dataSource={reimbs} columns={columns} />;
 };
+
+export default ReimbTable;

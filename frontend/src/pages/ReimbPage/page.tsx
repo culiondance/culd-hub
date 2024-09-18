@@ -1,14 +1,14 @@
-import { AppstoreAddOutlined } from "@ant-design/icons";
-import styles from "./style.module.css";
 import React, { useContext } from "react";
-import { UserContext } from "../../context/UserContext";
-import { User } from "../../types/types";
-import ReimbTableProvider from "./context/ReimbTableContext";
 import { Divider, Layout, Row, Typography } from "antd";
-
-import ReimbTable from "./context/ReimbTableContext";
-
+import { AppstoreAddOutlined } from "@ant-design/icons";
+import { UserContext } from "../../context/UserContext";
 import Header from "../../components/Navigation";
+
+import ReimbTableProvider from "./context/ReimbTableContext";
+import { User } from "../../types/types";
+import styles from "./style.module.css";
+
+import ReimbTable from "./components/ReimbTable/component";
 
 const ReimbPage = () => {
   const { user }: { user: User } = useContext(UserContext);
@@ -29,8 +29,7 @@ const ReimbPage = () => {
             </Typography.Title>
           </Row>
           <Divider className={styles.divider} />
-          <ReimbTable user={user} />
-          <ReimbTable />
+          < ReimbTable user = {user}/>
         </ReimbTableProvider>
       </Layout.Content>
     </Layout>

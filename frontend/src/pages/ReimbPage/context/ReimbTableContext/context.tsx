@@ -16,7 +16,9 @@ interface Props {
   children: React.ReactNode[];
 }
 
+// 
 // TODO: way to delete Reimbursement
+//
 export const ReimbTableProvider: React.FC<Props> = ({ children }: Props) => {
   const { logoutUser } = useContext(AuthContext);
   const { user }: { user: User } = useContext(UserContext);
@@ -25,7 +27,7 @@ export const ReimbTableProvider: React.FC<Props> = ({ children }: Props) => {
   useAuthQuery(GET_REIMBS_QUERY, {
     variables: { id },
     onCompleted: ({ reimbs }) => {
-      reimbs.forEach((reimb) => (reimb.date = dayjs(reimb.date)));
+      reimbs.forEach((reimb:Reimbursement) => (reimb.date = dayjs(reimb.date)));
       setReimbs(Reimbs);
     },
     onError: () => logoutUser(),
@@ -37,9 +39,10 @@ export const ReimbTableProvider: React.FC<Props> = ({ children }: Props) => {
     reimbs: Reimbs,
   };
 
+
   return (
     <ReimbTableContext.Provider value={data}>
-      {children}
+        {children}
     </ReimbTableContext.Provider>
   );
 };
