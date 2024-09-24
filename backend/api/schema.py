@@ -6,6 +6,7 @@ from django.dispatch import receiver
 from graphql_jwt.decorators import login_required, staff_member_required
 from graphql_jwt.refresh_token.signals import refresh_token_rotated
 
+from reimbs.models import Reimbursement
 from shows.models import Member, Show, Role
 from users.models import User
 from .mutations import (
@@ -17,6 +18,9 @@ from .mutations import (
     RegisterMutation,
     UpdateProfileMutation,
     UpdatePasswordMutation,
+    CompleteReimb,
+    DeleteReimb,
+    SubmitReimb,
 )
 from .types import UserType, MemberType, ShowType, ReimbursementType
 
@@ -36,7 +40,7 @@ class Query(graphene.ObjectType):
     shows = graphene.List(ShowType)
     me = graphene.Field(UserType)
     reimbs = graphene.List(ReimbursementType)
-    my_reimbs = graphene.List(ReimbursementType, user = graphene.String())
+    my_reimbs = graphene.List(ReimbursementType)
 
     school_choices = graphene.String()
     class_year_choices = graphene.String()
@@ -63,6 +67,13 @@ class Query(graphene.ObjectType):
     @login_required
     def resolve_me(root, info, **kwargs):
         return User.objects.get(pk=info.context.user.pk)
+
+    @staticmethod
+    @login_required
+    def resolve_my_reimbs(root, info, **kwargs):
+        #user = User.objects.get(pk=info.context.user.pk)
+        #return Reimbursement.objects.filter(user = user)
+        return Reimbursement.objects.all()
 
     @staticmethod
     def resolve_school_choices(root, info, **kwargs):
@@ -104,6 +115,11 @@ class Mutation(graphene.ObjectType):
     logout_user = LogoutUserMutation.Field()
     send_password_reset_email = SendPasswordResetEmailMutation.Field()
     reset_password = ResetPasswordMutation.Field()
+
+
+    complete_reimb = CompleteReimb.Field()
+    submit_reimb = SubmitReimb.Field()
+    delete_reimb = DeleteReimb.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)  # noqa

@@ -52,8 +52,10 @@ export default ReimbTableProvider;
 
 const GET_REIMBS_QUERY = gql`
 {
-        my_reimbs(id: $id){
-            show
+            myReimbs{
+            show {
+              id
+            }
             amount
             date
             receipts

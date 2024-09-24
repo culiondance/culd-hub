@@ -4,6 +4,9 @@ from django.core.files.storage import FileSystemStorage
 
 
 class Reimbursement(models.Model):
+    """Reimbursement
+    """
+
     user = models.ForeignKey("users.User", on_delete=models.CASCADE)
 
     show = models.OneToOneField(

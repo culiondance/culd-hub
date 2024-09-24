@@ -1,5 +1,6 @@
 import graphene
 
+
 from shows.models import Show, Member, Role
 from users.mixins import (
     SendPasswordResetEmailMixin,
@@ -13,7 +14,6 @@ from .bases import DynamicArgsMixin
 from .types import RoleType, ReimbursementType
 
 from reimbs.models import Reimbursement
-
 
 class CreateRoleMutation(graphene.Mutation):
     role = graphene.Field(RoleType)
@@ -47,8 +47,8 @@ class DeleteRoleMutation(graphene.Mutation):
         return DeleteRoleMutation(role=role_instance)
 
 
-class CompleteReimbMutation(graphene.Mutation):
-    role = graphene.Field(ReimbursementType)
+class CompleteReimb(graphene.Mutation):
+    reimb = graphene.Field(ReimbursementType)
 
     class Arguments:
         id = graphene.ID(required=True)
@@ -58,7 +58,35 @@ class CompleteReimbMutation(graphene.Mutation):
         reimbursement = Reimbursement.objects.get(pk=id)
         reimbursement.mark_completed()
         reimbursement.save()
-        return CompleteReimbMutation(id=id)
+        return CompleteReimb(reimb=id)
+
+class DeleteReimb(graphene.Mutation):
+    reimb = graphene.Field(ReimbursementType)
+    class Arguments:
+        reimb_id = graphene.ID(required=True)
+
+    @staticmethod
+    def mutate(root, info, reimb_id):
+        reimb=Reimbursement.objects.get(pk=reimb_id),
+        reimb.delete()
+        return DeleteReimb(reimb=reimb)
+
+class SubmitReimb(graphene.Mutation):
+    reimb = graphene.Field(ReimbursementType)
+    class Arguments:
+        user = graphene.ID(required = True)
+        show = graphene.ID(required = True)
+        amount = graphene.Float(required = True)
+        date = graphene.Date(required = True)
+        receipts = graphene.List(graphene.String, required=True)
+
+    @staticmethod
+    def mutate(parent, info):
+        reimbursement = Reimbursement(
+                user = parent.user, show = parent.show, amount = parent.amount, date = parent.date, receipts = parent.receipts, completed = False
+        )
+        reimbursement.save()
+        return SubmitReimb(reimb=reimbursement)
 
 
 class RegisterMutation(DynamicArgsMixin, RegisterMixin, graphene.Mutation):
