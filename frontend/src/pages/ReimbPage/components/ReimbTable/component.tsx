@@ -1,10 +1,5 @@
 import React, { useContext } from "react";
-import {
-  Modal,
-  Table,
-  Tooltip,
-  Image,
-} from "antd";
+import { Modal, Table, Tooltip, Image } from "antd";
 import {
   CheckSquareFilled,
   ClockCircleOutlined,
@@ -15,13 +10,10 @@ import { Dayjs } from "dayjs";
 import ShowDetails from "../../../ShowsPage/components/ShowDetails";
 import { Show, User, Reimbursement } from "../../../../types/types";
 
-import {
-  ReimbTableContext,
-} from "../../context/ReimbTableContext/types";
+import { ReimbTableContext } from "../../context/ReimbTableContext/types";
 
 const ReimbTable = () => {
-    const reimbs = useContext(ReimbTableContext);
-
+  const reimbs = useContext(ReimbTableContext);
 
   const columns = [
     {
@@ -79,10 +71,10 @@ const ReimbTable = () => {
       title: "amount",
       key: "amount",
       dataIndex: "amount",
-      render: (amount:number) => {
-          const formatter = Intl.NumberFormat("en-US", {
-              style: "currency",
-              currency: "USD",
+      render: (amount: number) => {
+        const formatter = Intl.NumberFormat("en-US", {
+          style: "currency",
+          currency: "USD",
         });
         const amnt = formatter.format(amount);
         return (
@@ -92,7 +84,7 @@ const ReimbTable = () => {
               marginRight: "8px",
             }}
           >
-          {amnt}
+            {amnt}
           </span>
         );
       },
