@@ -12,24 +12,13 @@ import ReimbTable from "./components/ReimbTable/component";
 
 const ReimbPage = () => {
   const { user }: { user: User } = useContext(UserContext);
+  //const { logoutUser } = useContext(AuthContext);
 
   return (
     <Layout>
       <Header newUserTooltip />
       <Layout.Content className={styles.content}>
         <ReimbTableProvider>
-          <Row
-            justify="space-between"
-            align="bottom"
-            className={styles.heading}
-          >
-            <Typography.Title className={styles.title} level={2}>
-              <AppstoreAddOutlined className={styles.icon} />
-              Reimbursements
-            </Typography.Title>
-          </Row>
-          <Divider className={styles.divider} />
-          < ReimbTable user = {user}/>
         </ReimbTableProvider>
       </Layout.Content>
     </Layout>

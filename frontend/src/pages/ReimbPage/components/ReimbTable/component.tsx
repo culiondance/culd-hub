@@ -1,36 +1,27 @@
 import React, { useContext } from "react";
 import {
-  Button,
   Modal,
-  Progress,
-  Space,
   Table,
-  Tag,
   Tooltip,
   Image,
 } from "antd";
-import { ColumnProps } from "antd/es/table";
 import {
   CheckSquareFilled,
   ClockCircleOutlined,
   InfoCircleOutlined,
-  InfoCircleTwoTone,
-  PlusOutlined,
-  StarFilled,
-  WarningFilled,
 } from "@ant-design/icons";
-import dayjs, { Dayjs } from "dayjs";
+import { Dayjs } from "dayjs";
 
 import ShowDetails from "../../../ShowsPage/components/ShowDetails";
-import { Show, User } from "../../../../types/types";
+import { Show, User, Reimbursement } from "../../../../types/types";
 
 import {
-  ReimbTableContextInterface,
   ReimbTableContext,
 } from "../../context/ReimbTableContext/types";
 
-const ReimbTable = ({ user }: { user: User }) => {
-  const { reimbs }: ReimbTableContextInterface = useContext(ReimbTableContext);
+const ReimbTable = () => {
+    const reimbs = useContext(ReimbTableContext);
+
 
   const columns = [
     {
@@ -88,7 +79,12 @@ const ReimbTable = ({ user }: { user: User }) => {
       title: "amount",
       key: "amount",
       dataIndex: "amount",
-      render: (amount) => {
+      render: (amount:number) => {
+          const formatter = Intl.NumberFormat("en-US", {
+              style: "currency",
+              currency: "USD",
+        });
+        const amnt = formatter.format(amount);
         return (
           <span
             style={{
@@ -96,7 +92,7 @@ const ReimbTable = ({ user }: { user: User }) => {
               marginRight: "8px",
             }}
           >
-            ("$" + amount.toFixed(2))
+          {amnt}
           </span>
         );
       },
@@ -105,7 +101,7 @@ const ReimbTable = ({ user }: { user: User }) => {
       title: "receipts",
       key: "receipts",
       dataIndex: "receipts",
-      render: (urls: String[]) => {
+      render: () => {
         return <Image></Image>;
       },
     },
