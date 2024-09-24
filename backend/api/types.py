@@ -65,7 +65,7 @@ class ShowType(DjangoObjectType):
 class ReimbursementType(DjangoObjectType):
     class Meta:
         model = Reimbursement
-        fields = ("id", "user", "show", "amount", "date", "receipts", "completed")
+        fields = ("id", "member", "show", "amount", "date", "receipts", "completed")
 
 
 class RoundType(DjangoObjectType):

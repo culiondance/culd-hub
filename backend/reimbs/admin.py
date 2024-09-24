@@ -12,7 +12,7 @@ class ReimbursementAdmin(admin.ModelAdmin):
     list_display = [
         "completed",
         "date",
-        "user",
+        "member",
         "show",
         "amount",
         "receipts",
@@ -21,4 +21,7 @@ class ReimbursementAdmin(admin.ModelAdmin):
     actions = [mark_complete]
 
 
-admin.site.register(Reimbursement, ReimbursementAdmin)
+
+#admin.site.register(Reimbursement)
+#admin.site.unregister(Reimbursement)
+admin.site.register(Reimbursement)

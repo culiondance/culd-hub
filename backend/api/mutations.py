@@ -15,6 +15,7 @@ from .types import RoleType, ReimbursementType
 
 from reimbs.models import Reimbursement
 
+
 class CreateRoleMutation(graphene.Mutation):
     role = graphene.Field(RoleType)
 

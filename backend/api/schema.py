@@ -38,6 +38,7 @@ class Query(graphene.ObjectType):
     users = graphene.List(UserType)
     members = graphene.List(MemberType)
     shows = graphene.List(ShowType)
+    my_shows = graphene.List(ShowType)
     me = graphene.Field(UserType)
     reimbs = graphene.List(ReimbursementType)
     my_reimbs = graphene.List(ReimbursementType)
@@ -60,8 +61,11 @@ class Query(graphene.ObjectType):
         return Member.objects.all()
 
     @staticmethod
-    def resolve_shows(root, info, **kwargs):
-        return Show.objects.filter(status__gt=Show.STATUSES.draft)
+    @login_required
+    def resolve_my_shows(root, info, **kwargs):
+        me = Member.objects.get(pk=info.context.user.pk)
+        shows = list(me.performed_shows.all()) + list(me.pointed_shows.all())
+        return shows
 
     @staticmethod
     @login_required
@@ -71,6 +75,9 @@ class Query(graphene.ObjectType):
     @staticmethod
     @login_required
     def resolve_my_reimbs(root, info, **kwargs):
+        me = Member.objects.get(pk=info.context.user.pk)
+        return me.reimbs.all()
+
         #user = User.objects.get(pk=info.context.user.pk)
         #return Reimbursement.objects.filter(user = user)
         return Reimbursement.objects.all()
