@@ -16,7 +16,6 @@ import {
   InMemoryCache,
 } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
-
 export const AuthContext = createContext(undefined);
 
 interface Props {
@@ -132,6 +131,7 @@ export const AuthProvider: React.FC<Props> = ({ children }: Props) => {
           },
         };
       });
+
 
       setClient(
         new ApolloClient({

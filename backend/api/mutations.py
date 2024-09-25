@@ -72,24 +72,6 @@ class DeleteReimb(graphene.Mutation):
         reimb.delete()
         return DeleteReimb(reimb=reimb)
 
-class SubmitReimb(graphene.Mutation):
-    reimb = graphene.Field(ReimbursementType)
-    class Arguments:
-        user = graphene.ID(required = True)
-        show = graphene.ID(required = True)
-        amount = graphene.Float(required = True)
-        date = graphene.Date(required = True)
-        receipts = graphene.List(graphene.String, required=True)
-
-    @staticmethod
-    def mutate(parent, info):
-        reimbursement = Reimbursement(
-                user = parent.user, show = parent.show, amount = parent.amount, date = parent.date, receipts = parent.receipts, completed = False
-        )
-        reimbursement.save()
-        return SubmitReimb(reimb=reimbursement)
-
-
 class RegisterMutation(DynamicArgsMixin, RegisterMixin, graphene.Mutation):
     __doc__ = RegisterMixin.__doc__
     _required_args = ["email", "password1", "password2", "first_name", "last_name"]

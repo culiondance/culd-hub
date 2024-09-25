@@ -49,10 +49,13 @@ export type Contact = {
 };
 
 export type Reimbursement = {
-  user: Member;
-  show: Show;
+  member: Member;
+  show: {
+    name: string;
+    date: Dayjs;
+  };
   amount: number;
   date: Dayjs;
-  receipts: string[];
+  //receipts: string[];
   completed: boolean;
 };

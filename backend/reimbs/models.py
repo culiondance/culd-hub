@@ -6,7 +6,7 @@ from django.conf import settings
 
 class Reimbursement(models.Model):
 
-    member = models.ForeignKey("shows.Member", on_delete=models.CASCADE, related_name="reimbs")
+    member = models.ForeignKey("shows.Member", on_delete=models.CASCADE, related_name="reimbs", null = True)
 
     show = models.OneToOneField(
         "shows.Show", related_name="show", on_delete=models.CASCADE, null=True
@@ -16,7 +16,7 @@ class Reimbursement(models.Model):
 
     date = models.DateField(verbose_name="date filled out")
 
-    receipts = ArrayField(models.ImageField(upload_to="receipts/%Y-%m-%d"))
+    #receipts = ArrayField(models.ImageField(upload_to="receipts/%Y-%m-%d"))
 
     completed = models.BooleanField(default=False, verbose_name="completed")
     
@@ -28,10 +28,11 @@ class Reimbursement(models.Model):
 
     def mark_completed(self):
         if not self.completed:
-            self.delete_receipts()
+            #self.delete_receipts()
             self.completed = True
             super().save()
-
+    '''
     def delete_receipts(self):
         for image in self.receipts:
             FileSystemStorage.delete(image.name)
+    '''

@@ -15,7 +15,7 @@ class ReimbursementAdmin(admin.ModelAdmin):
         "member",
         "show",
         "amount",
-        "receipts",
+        #"receipts",
     ]
 
     actions = [mark_complete]

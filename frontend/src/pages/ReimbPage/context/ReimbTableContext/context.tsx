@@ -17,17 +17,6 @@ interface Props {
   children: React.ReactNode[];
 }
 
-function getReimbs() {
-  //const { logoutUser } = useContext(AuthContext);
-  const { user }: { user: User } = useContext(UserContext);
-  const id = user.id;
-  const { loading, error, data } = useAuthQuery(GET_REIMBS_QUERY, {
-    variables: { id },
-  });
-  if (loading) return "Loading...";
-  if (error) return `Error! ${error.message}`;
-  return data;
-}
 
 export const ReimbTableProvider: React.FC<Props> = ({ children }: Props) => {
   const { logoutUser } = useContext(AuthContext);
@@ -41,7 +30,7 @@ export const ReimbTableProvider: React.FC<Props> = ({ children }: Props) => {
   const data: Reimbursement[] = result.data;
   if (data)
     return (
-      <ReimbTableContext.Provider value={ReimbTableContext}>
+      <ReimbTableContext.Provider value={data}>
         {children}
       </ReimbTableContext.Provider>
     );
@@ -51,16 +40,16 @@ export const ReimbTableProvider: React.FC<Props> = ({ children }: Props) => {
 export default ReimbTableProvider;
 
 const GET_REIMBS_QUERY = gql`
-{
-            myReimbs{
-            show {
-              id
-            }
-            amount
-            date
-            receipts
-            completed
-            id
-        }
-}
+  {
+    myReimbs {
+      show {
+        date
+        name
+      }
+      amount
+      date
+      completed
+      id
+    }
+  }
 `;

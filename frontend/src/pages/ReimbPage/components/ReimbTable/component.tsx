@@ -5,7 +5,7 @@ import {
   ClockCircleOutlined,
   InfoCircleOutlined,
 } from "@ant-design/icons";
-import { Dayjs } from "dayjs";
+import dayjs from 'dayjs'
 
 import ShowDetails from "../../../ShowsPage/components/ShowDetails";
 import { Show, User, Reimbursement } from "../../../../types/types";
@@ -13,7 +13,7 @@ import { Show, User, Reimbursement } from "../../../../types/types";
 import { ReimbTableContext } from "../../context/ReimbTableContext/types";
 
 const ReimbTable = () => {
-  const reimbs = useContext(ReimbTableContext);
+  const {myReimbs: reimbs} = useContext(ReimbTableContext);
 
   const columns = [
     {
@@ -28,15 +28,19 @@ const ReimbTable = () => {
       title: "date",
       key: "date",
       dataIndex: "date",
-      render: (date: Dayjs) => {
-        return date ? date.format("ddd, MMM DD") : "";
+      render: (date: dayjs.Dayjs) => {
+        if (date){
+            const _date = dayjs(date)
+            return _date.format('ddd MMM DD YY');
+        }
+        return ""
       },
     },
     {
       title: "show",
       key: "show",
-      dataIndex: "name",
-      render: (show: Show) => {
+      dataIndex: "show",
+      render: ({name:showname, date:showdate}) => {
         return (
           <>
             <span
@@ -45,25 +49,9 @@ const ReimbTable = () => {
                 marginRight: "8px",
               }}
             >
-              {show.name}
+            {showdate} {showname}
             </span>
-            <Tooltip
-              title="More Info"
-              placement="bottom"
-              style={{ textAlign: "center" }}
-            >
-              <InfoCircleOutlined
-                style={{ color: "gray" }}
-                onClick={() => {
-                  Modal.info({
-                    title: show.name,
-                    content: <ShowDetails show={show} />,
-                    width: "60%",
-                  });
-                }}
-              />
-            </Tooltip>
-          </>
+        </>
         );
       },
     },
@@ -88,7 +76,8 @@ const ReimbTable = () => {
           </span>
         );
       },
-    },
+    }
+    /*,
     {
       title: "receipts",
       key: "receipts",
@@ -97,6 +86,7 @@ const ReimbTable = () => {
         return <Image></Image>;
       },
     },
+    */
   ];
 
   return <Table dataSource={reimbs} columns={columns} />;

@@ -6,11 +6,10 @@ import Header from "../../components/Navigation";
 
 import ReimbTableProvider from "./context/ReimbTableContext";
 import { User } from "../../types/types";
+import ReimbTable from "./components/ReimbTable"
 import styles from "./style.module.css";
 
-
 const ReimbPage = () => {
-
   return (
     <Layout>
       <Header newUserTooltip />
@@ -27,6 +26,7 @@ const ReimbPage = () => {
             </Typography.Title>
           </Row>
           <Divider className={styles.divider} />
+          <ReimbTable />
         </ReimbTableProvider>
       </Layout.Content>
     </Layout>

@@ -20,7 +20,6 @@ from .mutations import (
     UpdatePasswordMutation,
     CompleteReimb,
     DeleteReimb,
-    SubmitReimb,
 )
 from .types import UserType, MemberType, ShowType, ReimbursementType
 
@@ -51,6 +50,10 @@ class Query(graphene.ObjectType):
     performance_role_choices = graphene.String()
 
     @staticmethod
+    def resolve_reimbs(root, info, **kwargs):
+        return Reimbursement.objects.all()
+
+    @staticmethod
     @staff_member_required
     def resolve_users(root, info, **kwargs):
         return User.objects.all()
@@ -73,14 +76,11 @@ class Query(graphene.ObjectType):
         return User.objects.get(pk=info.context.user.pk)
 
     @staticmethod
-    @login_required
     def resolve_my_reimbs(root, info, **kwargs):
-        me = Member.objects.get(pk=info.context.user.pk)
-        return me.reimbs.all()
-
-        #user = User.objects.get(pk=info.context.user.pk)
-        #return Reimbursement.objects.filter(user = user)
-        return Reimbursement.objects.all()
+        me = User.objects.get(pk=info.context.user.pk).member
+        if me is not None:
+            return me.reimbs.all()
+        return None
 
     @staticmethod
     def resolve_school_choices(root, info, **kwargs):
@@ -125,7 +125,6 @@ class Mutation(graphene.ObjectType):
 
 
     complete_reimb = CompleteReimb.Field()
-    submit_reimb = SubmitReimb.Field()
     delete_reimb = DeleteReimb.Field()
 
 
