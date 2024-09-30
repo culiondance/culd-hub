@@ -75,8 +75,7 @@ class Query(graphene.ObjectType):
     @login_required
     def resolve_my_shows(root, info, **kwargs):
         me = User.objects.get(pk=info.context.user.pk).member
-        shows = list(me.performed_shows.all()) + list(me.pointed_shows.all())
-        return shows
+        return me.performed_shows.all()
 
     @staticmethod
     @login_required

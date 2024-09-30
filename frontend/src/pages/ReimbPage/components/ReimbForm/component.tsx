@@ -76,7 +76,7 @@ const ReimbForm = () => {
   };
 
   type FormValues = {
-    show: {id:number, name:string},
+    show: number,
     amount: number,
     files: string[],
     description:string,
@@ -85,10 +85,10 @@ const ReimbForm = () => {
   const [submitForm] = useAuthMutation(SUBMIT_REIMB, {});
 
   function submit_form(values:FormValues) {
-      console.log(values);
       //const vars = {show:values.show.id, amount:values.amount};
-      const vars = {show:values.show.id, amount:values.amount};
-      submitForm({variables:vars});
+      const vars = {show:values.show, amount:values.amount};
+      console.log(values);
+      submitForm({variables: vars});
       //setIsModalOpen(false);
   }
 

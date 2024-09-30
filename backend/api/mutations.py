@@ -72,7 +72,7 @@ class DeleteReimb(graphene.Mutation):
 
     @staticmethod
     def mutate(root, info, reimb_id):
-        reimb=Reimbursement.objects.get(pk=reimb_id),
+        reimb=Reimbursement.objects.get(pk=reimb_id)
         reimb.delete()
         return DeleteReimb(reimb=reimb)
 
@@ -87,12 +87,13 @@ class SubmitReimb(graphene.Mutation):
     @staticmethod
     def mutate(self, info, files, show, amount):
         
-        member=Member.objects.get(pk=info.context.user.member.id),
+        member=Member.objects.get(pk=info.context.user.member.id)
+        show_object=Show.objects.get(pk=show)
         date = Now()
        
         reimb_instance = Reimbursement(
             receipts = files,
-            show = show,
+            show = show_object,
             amount = amount,
             member = member,
             date = date

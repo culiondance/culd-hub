@@ -13,7 +13,7 @@ class Reimbursement(models.Model):
 
     member = models.ForeignKey("shows.Member", on_delete=models.CASCADE, related_name="reimbs", null = True)
 
-    show = models.OneToOneField(
+    show = models.ForeignKey(
         "shows.Show", related_name="show", on_delete=models.CASCADE, null=True
     )
 

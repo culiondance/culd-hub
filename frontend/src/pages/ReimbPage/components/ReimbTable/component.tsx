@@ -49,7 +49,7 @@ const ReimbTable = () => {
                 marginRight: "8px",
               }}
             >
-              {showdate} {showname}
+              {showname}
             </span>
           </>
         );
