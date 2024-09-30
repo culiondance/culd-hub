@@ -1,25 +1,22 @@
 import { Form, Input, InputNumber, Select, Upload, Button, Modal } from "antd";
 import { InboxOutlined, UploadOutlined } from "@ant-design/icons";
-import { QueryResult, useAuthQuery } from "../../../../services/graphql";
+import { useAuthMutation, useAuthQuery } from "../../../../services/graphql";
 
-import {GET_SHOWS_QUERY} from "../../../ShowsPage/context/ShowsTableContext/queries"
 import { Show } from "../../../../types/types";
 import React, { useContext, useState } from "react";
-import { gql } from "@apollo/client";
+import { gql, useMutation} from "@apollo/client";
 import { Dayjs } from "dayjs";
 
-/*
-const NEW_REIMB = gql`
-{
-    mutation ($member: member!, $amount: amount!, $date: date!, $receipts: [Upload!]!) {
-        CreateReimbursement(member:$member, amount:$amount, date:$date, receipts: uploadFiles(files: $receipts) {
-            success
-        })
+const SUBMIT_REIMB = gql`
+    mutation SubmitReimb($amount: Float!, $show:ID!){
+        submitReimb(show:$show,amount:$amount, files:none){
+            reimb{
+                id
+            }
+        }
     }
-}
 `;
 
-*/
 const MY_SHOWS = gql`
   {
     myShows{
@@ -31,18 +28,17 @@ const MY_SHOWS = gql`
 `;
 
 
-function get_shows(){
-    const [options, SetOptions] = useState([]);
-    useAuthQuery(GET_SHOWS_QUERY, {
-        onCompleted: ({myShows: shows}) => {
-          SetOptions(shows.map(
-              (show:Show) => {
-                  return (<Select.Option value={show} key={show.id}>{show.name}</Select.Option>)
-              }
-          ));
+
+
+function get_shows(SetOptions){
+    useAuthQuery(MY_SHOWS, {
+        onCompleted: (query) => {
+            const options = query.myShows.map(
+              show => <Select.Option value={show.id} key={show.id}>{show.name}</Select.Option>
+            );
+          SetOptions(options);
         }
     })
-    return options; 
 }
 
 type FieldType = {
@@ -66,7 +62,9 @@ const ReimbForm = () => {
 
   const [form] = Form.useForm();
 
-  const shows = get_shows();
+
+  const [shows, SetShows] = useState([]);
+  get_shows(SetShows)
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
@@ -77,11 +75,26 @@ const ReimbForm = () => {
     setIsModalOpen(false);
   };
 
-  function submitForm(values) {
-    setIsModalOpen(false);
+  type FormValues = {
+    show: {id:number, name:string},
+    amount: number,
+    files: string[],
+    description:string,
+  };
+
+  const [submitForm] = useAuthMutation(SUBMIT_REIMB, {});
+
+  function submit_form(values:FormValues) {
+      console.log(values);
+      //const vars = {show:values.show.id, amount:values.amount};
+      const vars = {show:values.show.id, amount:values.amount};
+      submitForm({variables:vars});
+      //setIsModalOpen(false);
   }
-  /*
-*/
+
+  // TODO:
+  // use onRemove and beforeUpload to actually upload the file
+  // (https://ant.design/components/upload?ref=AwesomeTechStack#upload-demo-upload-manually)
   return (
     <>
       <Button type="primary" onClick={showModal}>
@@ -97,7 +110,7 @@ const ReimbForm = () => {
         <Form
           form={form}
           name="SubmitReimb"
-          onFinish={submitForm}
+          onFinish={submit_form}
           {...formItemLayout}
         >
           <Form.Item<FieldType> name="show" label="Show">
@@ -125,7 +138,7 @@ const ReimbForm = () => {
         </Upload.Dragger>
       </Form.Item>
           <Form.Item >
-            <Button type="primary" onClick={submitForm}>
+            <Button type="primary" htmlType="submit">
               Submit
             </Button>
           </Form.Item>

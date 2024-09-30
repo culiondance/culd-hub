@@ -20,6 +20,7 @@ from .mutations import (
     UpdatePasswordMutation,
     CompleteReimb,
     DeleteReimb,
+    SubmitReimb,
 )
 from .types import UserType, MemberType, ShowType, ReimbursementType
 
@@ -65,6 +66,9 @@ class Query(graphene.ObjectType):
 
     @staticmethod
     def resolve_shows(root, info, **kwargs):
+        print("on resolve shows!")
+        shows = Show.objects.filter(status__gt=Show.STATUSES.draft)
+        print("got " + str(shows))
         return Show.objects.filter(status__gt=Show.STATUSES.draft)
 
     @staticmethod
@@ -130,6 +134,7 @@ class Mutation(graphene.ObjectType):
 
     complete_reimb = CompleteReimb.Field()
     delete_reimb = DeleteReimb.Field()
+    submit_reimb = SubmitReimb.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)  # noqa

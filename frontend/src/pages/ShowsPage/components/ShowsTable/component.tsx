@@ -29,9 +29,7 @@ const ShowsTable = ({ user }: { user: User }) => {
     addToShowRoster,
     removeFromShowRoster,
   }: ShowContextInterface = useContext(ShowsTableContext);
-
   const performersNeeded = (show: Show) => show.lions * 2 + 2;
-    console.log("shows:" + shows);
   const columns = [
     {
       title: "",
@@ -286,7 +284,7 @@ const ShowsTable = ({ user }: { user: User }) => {
                     )
               }
               format={() => `${performers.length}`}
-              width={32}
+              size={32}
               style={{
                 marginLeft: "auto",
                 marginRight: "10px",

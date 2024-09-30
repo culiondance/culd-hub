@@ -50,15 +50,40 @@ export const ShowsTableProvider: React.FC<Props> = ({ children }: Props) => {
   const [optionsFilter, setOptionsFilter] = useState<Options>(Options.UPCOMING);
   const [needsRefresh, setNeedsRefresh] = useState<boolean>(true);
 
+
+
+  const showFromQuery: (query:any) => Show = (query) => {
+        const show:Show = {
+          id: query.id,
+          name: query.name,
+          priority: query.priority,
+          date: dayjs(query.date),
+          time: query.time,
+          rounds: query.rounds,
+          address: query.address,
+          lions: query.lions,
+          performers: query.performers,
+          point: query.point,
+          contact: query.contact,
+          isCampus: query.isCampus,
+          isOutOfCity: query.isOutOfCity,
+          isOpen: query.isOpen,
+          isPending: query.isPending,
+          status: query.status,
+          notes: query.notes,
+	};
+        return (show);
+  };
+
+  const updateShows:(query:{shows:any[]}) => void = (query) => {
+        const shows:Show[] = query.shows.map(showFromQuery);
+        setShows(shows);
+        setNeedsRefresh(false);
+  };
+
   const [shows, setShows] = useState<Show[]>([]);
   const [getShows] = useAuthLazyQuery(GET_SHOWS_QUERY, {
-    onCompleted: ({ shows }) => {
-        if(shows != null){
-          shows.forEach((show:Show) => (show.date = dayjs(show.date)));
-          setShows(shows);
-          setNeedsRefresh(false);
-        }
-    },
+	onCompleted: updateShows,
     onError: () => logoutUser(),
     fetchPolicy: "network-only",
     nextFetchPolicy: "network-only",

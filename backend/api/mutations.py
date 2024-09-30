@@ -18,6 +18,8 @@ from .types import RoleType, ReimbursementType
 from reimbs.models import Reimbursement
 
 
+
+
 class CreateRoleMutation(graphene.Mutation):
     role = graphene.Field(RoleType)
 
@@ -78,13 +80,14 @@ class SubmitReimb(graphene.Mutation):
     reimb = graphene.Field(ReimbursementType)
 
     class Arguments:
-        files = graphene.List(Upload, required=True)
+        files = graphene.List(Upload, required=False)
         show = graphene.ID(required = True)
         amount = graphene.Float(required = True)
 
     @staticmethod
     def mutate(self, info, files, show, amount):
-        member = User.objects.get(pk=info.context.user.pk).member
+        
+        member=Member.objects.get(pk=info.context.user.member.id),
         date = Now()
        
         reimb_instance = Reimbursement(
