@@ -5,7 +5,7 @@ import {
   ClockCircleOutlined,
   InfoCircleOutlined,
 } from "@ant-design/icons";
-import dayjs from 'dayjs'
+import dayjs from "dayjs";
 
 import ShowDetails from "../../../ShowsPage/components/ShowDetails";
 import { Show, User, Reimbursement } from "../../../../types/types";
@@ -13,7 +13,7 @@ import { Show, User, Reimbursement } from "../../../../types/types";
 import { ReimbTableContext } from "../../context/ReimbTableContext/types";
 
 const ReimbTable = () => {
-  const {myReimbs: reimbs} = useContext(ReimbTableContext);
+  const { myReimbs: reimbs } = useContext(ReimbTableContext);
 
   const columns = [
     {
@@ -29,18 +29,18 @@ const ReimbTable = () => {
       key: "date",
       dataIndex: "date",
       render: (date: dayjs.Dayjs) => {
-        if (date){
-            const _date = dayjs(date)
-            return _date.format('ddd MMM DD YY');
+        if (date) {
+          const _date = dayjs(date);
+          return _date.format("ddd MMM DD YY");
         }
-        return ""
+        return "";
       },
     },
     {
       title: "show",
       key: "show",
       dataIndex: "show",
-      render: ({name:showname, date:showdate}) => {
+      render: ({ name: showname, date: showdate }) => {
         return (
           <>
             <span
@@ -49,9 +49,9 @@ const ReimbTable = () => {
                 marginRight: "8px",
               }}
             >
-            {showdate} {showname}
+              {showdate} {showname}
             </span>
-        </>
+          </>
         );
       },
     },
@@ -76,7 +76,7 @@ const ReimbTable = () => {
           </span>
         );
       },
-    }
+    },
     /*,
     {
       title: "receipts",

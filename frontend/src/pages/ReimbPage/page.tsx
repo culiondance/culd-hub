@@ -1,12 +1,13 @@
-import React, { useContext } from "react";
-import { Divider, Layout, Row, Typography } from "antd";
-import { AppstoreAddOutlined } from "@ant-design/icons";
+import React, { useState } from "react";
+import { Divider, Layout, Row, Typography, Button, Modal } from "antd";
+import { BankOutlined } from "@ant-design/icons";
 import { UserContext } from "../../context/UserContext";
 import Header from "../../components/Navigation";
 
 import ReimbTableProvider from "./context/ReimbTableContext";
 import { User } from "../../types/types";
-import ReimbTable from "./components/ReimbTable"
+import ReimbTable from "./components/ReimbTable";
+import ReimbForm from "./components/ReimbForm";
 import styles from "./style.module.css";
 
 const ReimbPage = () => {
@@ -21,11 +22,12 @@ const ReimbPage = () => {
             className={styles.heading}
           >
             <Typography.Title className={styles.title} level={2}>
-              <AppstoreAddOutlined className={styles.icon} />
+              <BankOutlined className={styles.icon} />
               Reimbursements
             </Typography.Title>
           </Row>
           <Divider className={styles.divider} />
+          <ReimbForm />
           <ReimbTable />
         </ReimbTableProvider>
       </Layout.Content>

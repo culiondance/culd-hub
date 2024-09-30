@@ -31,7 +31,7 @@ const ShowsTable = ({ user }: { user: User }) => {
   }: ShowContextInterface = useContext(ShowsTableContext);
 
   const performersNeeded = (show: Show) => show.lions * 2 + 2;
-
+    console.log("shows:" + shows);
   const columns = [
     {
       title: "",

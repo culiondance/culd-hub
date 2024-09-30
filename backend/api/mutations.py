@@ -1,7 +1,9 @@
 import graphene
 
-
+from django.db.models.functions import Now
+from graphene_file_upload.scalars import Upload
 from shows.models import Show, Member, Role
+from users.models import User
 from users.mixins import (
     SendPasswordResetEmailMixin,
     LogoutUserMixin,
@@ -71,6 +73,32 @@ class DeleteReimb(graphene.Mutation):
         reimb=Reimbursement.objects.get(pk=reimb_id),
         reimb.delete()
         return DeleteReimb(reimb=reimb)
+
+class SubmitReimb(graphene.Mutation):
+    reimb = graphene.Field(ReimbursementType)
+
+    class Arguments:
+        files = graphene.List(Upload, required=True)
+        show = graphene.ID(required = True)
+        amount = graphene.Float(required = True)
+
+    @staticmethod
+    def mutate(self, info, files, show, amount):
+        member = User.objects.get(pk=info.context.user.pk).member
+        date = Now()
+       
+        reimb_instance = Reimbursement(
+            receipts = files,
+            show = show,
+            amount = amount,
+            member = member,
+            date = date
+        )
+        reimb_instance.save()
+
+        return SubmitReimb(reimb = reimb_instance)
+
+
 
 class RegisterMutation(DynamicArgsMixin, RegisterMixin, graphene.Mutation):
     __doc__ = RegisterMixin.__doc__

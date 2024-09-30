@@ -17,7 +17,6 @@ interface Props {
   children: React.ReactNode[];
 }
 
-
 export const ReimbTableProvider: React.FC<Props> = ({ children }: Props) => {
   const { logoutUser } = useContext(AuthContext);
   const { user }: { user: User } = useContext(UserContext);

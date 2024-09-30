@@ -3,6 +3,11 @@ from django.db import models
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 
+def get_upload_name(instance, filename):
+    id = instance.user.id
+    date = instance.date.strftime("%d-%m-%y %H:%M:%S")
+    return "user_{0}/{1}".format(id,date)
+
 
 class Reimbursement(models.Model):
 
@@ -16,7 +21,7 @@ class Reimbursement(models.Model):
 
     date = models.DateField(verbose_name="date filled out")
 
-    #receipts = ArrayField(models.ImageField(upload_to="receipts/%Y-%m-%d"))
+    receipts = ArrayField(models.ImageField(upload_to=get_upload_name), null = True)
 
     completed = models.BooleanField(default=False, verbose_name="completed")
     
@@ -28,11 +33,12 @@ class Reimbursement(models.Model):
 
     def mark_completed(self):
         if not self.completed:
-            #self.delete_receipts()
+            self.delete_receipts()
             self.completed = True
             super().save()
-    '''
+    
     def delete_receipts(self):
         for image in self.receipts:
             FileSystemStorage.delete(image.name)
-    '''
+
+

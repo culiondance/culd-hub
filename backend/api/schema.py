@@ -64,9 +64,13 @@ class Query(graphene.ObjectType):
         return Member.objects.all()
 
     @staticmethod
+    def resolve_shows(root, info, **kwargs):
+        return Show.objects.filter(status__gt=Show.STATUSES.draft)
+
+    @staticmethod
     @login_required
     def resolve_my_shows(root, info, **kwargs):
-        me = Member.objects.get(pk=info.context.user.pk)
+        me = User.objects.get(pk=info.context.user.pk).member
         shows = list(me.performed_shows.all()) + list(me.pointed_shows.all())
         return shows
 

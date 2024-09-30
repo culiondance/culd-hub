@@ -53,9 +53,11 @@ export const ShowsTableProvider: React.FC<Props> = ({ children }: Props) => {
   const [shows, setShows] = useState<Show[]>([]);
   const [getShows] = useAuthLazyQuery(GET_SHOWS_QUERY, {
     onCompleted: ({ shows }) => {
-      shows.forEach((show) => (show.date = dayjs(show.date)));
-      setShows(shows);
-      setNeedsRefresh(false);
+        if(shows != null){
+          shows.forEach((show:Show) => (show.date = dayjs(show.date)));
+          setShows(shows);
+          setNeedsRefresh(false);
+        }
     },
     onError: () => logoutUser(),
     fetchPolicy: "network-only",
