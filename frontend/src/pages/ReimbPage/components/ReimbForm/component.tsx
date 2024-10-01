@@ -28,7 +28,7 @@ const MY_SHOWS = gql`
 `;
 
 
-const SubmitButton = ({ form}) => {
+const SubmitButton = ({form}:{form:FormInstance}) => {
   const [submittable, setSubmittable] = React.useState<boolean>(false);
 
   // Watch all values
@@ -79,7 +79,7 @@ const ReimbForm = () => {
     return e?.fileList;
   };
 
-  const [form] = Form.useForm();
+  const [form]:[FormInstance] = Form.useForm();
 
 
   const [shows, SetShows] = useState([]);
@@ -111,7 +111,7 @@ const ReimbForm = () => {
       //setIsModalOpen(false);
   }
 
-  const [files, setFiles] = useState<FileList[]>([]);
+  const [files, setFiles] = useState<FileList>(null);
 
   return (
     <>
