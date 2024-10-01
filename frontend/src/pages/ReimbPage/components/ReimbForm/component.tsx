@@ -1,7 +1,7 @@
-import { Form, Input, InputNumber, Select, Upload, Button, Modal } from "antd";
+import { Form, Input, InputNumber, Select, Upload, Button, Modal, FormInstance } from "antd";
 import { InboxOutlined, UploadOutlined } from "@ant-design/icons";
 import { useAuthMutation, useAuthQuery } from "../../../../services/graphql";
-
+import FileUploadBox from "../FileUploadBox";
 import { Show } from "../../../../types/types";
 import React, { useContext, useState } from "react";
 import { gql, useMutation} from "@apollo/client";
@@ -28,7 +28,23 @@ const MY_SHOWS = gql`
 `;
 
 
+const SubmitButton = ({ form}) => {
+  const [submittable, setSubmittable] = React.useState<boolean>(false);
 
+  // Watch all values
+  const values = Form.useWatch([], form);
+
+  React.useEffect(() => {
+    form
+      .validateFields({ validateOnly: true })
+      .then(() => setSubmittable(true))
+      .catch(() => setSubmittable(false));
+  }, [form, values]);
+
+  return (
+    <Button type="primary" htmlType="submit" disabled={!submittable}/>
+  );
+};
 
 function get_shows(SetOptions){
     useAuthQuery(MY_SHOWS, {
@@ -41,16 +57,19 @@ function get_shows(SetOptions){
     })
 }
 
+
 type FieldType = {
-  amount?: number;
-  show?: number;
-  description?: string;
+  Amount?: number;
+  Show?: number;
+  Description?: string;
 };
 
 const formItemLayout = {
   labelCol: { span: 6 },
   wrapperCol: { span: 14 },
 };
+
+
 
 const ReimbForm = () => {
   const normFile = (e: any) => {
@@ -92,9 +111,8 @@ const ReimbForm = () => {
       //setIsModalOpen(false);
   }
 
-  // TODO:
-  // use onRemove and beforeUpload to actually upload the file
-  // (https://ant.design/components/upload?ref=AwesomeTechStack#upload-demo-upload-manually)
+  const [files, setFiles] = useState<FileList[]>([]);
+
   return (
     <>
       <Button type="primary" onClick={showModal}>
@@ -113,13 +131,13 @@ const ReimbForm = () => {
           onFinish={submit_form}
           {...formItemLayout}
         >
-          <Form.Item<FieldType> name="show" label="Show">
-            <Select placeholder="Select a show you attended">{shows}</Select>
+          <Form.Item<FieldType> name="Show" label="show" rules={[{required: true}]}>
+            <Select placeholder="Select a show">{shows}</Select>
           </Form.Item>
-          <Form.Item<FieldType> name="amount" label="Amount">
+          <Form.Item<FieldType> name="Amount" label="amount" rules={[{required: true}]}>
             <InputNumber />
           </Form.Item>
-          <Form.Item<FieldType> name="description" label="Description">
+          <Form.Item<FieldType> name="Description" label="description" rules={[{required: true}]}>
             <Input.TextArea />
           </Form.Item>
 	<Form.Item
@@ -128,19 +146,10 @@ const ReimbForm = () => {
         valuePropName="fileList"
         getValueFromEvent={normFile}
       >
-        <Upload.Dragger name="files">
-          <p className="ant-upload-drag-icon">
-            <InboxOutlined />
-          </p>
-          <p className="ant-upload-text">
-            Click or drag file to this area to upload
-          </p>
-        </Upload.Dragger>
+        <FileUploadBox setFiles = {setFiles}></FileUploadBox>
       </Form.Item>
           <Form.Item >
-            <Button type="primary" htmlType="submit">
-              Submit
-            </Button>
+            <SubmitButton form={form}/>
           </Form.Item>
 
         </Form>
