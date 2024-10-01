@@ -44,7 +44,9 @@ INSTALLED_APPS = [
     "shows.apps.ShowsConfig",
     "slack.apps.SlackConfig",
     "reimbs.apps.ReimbsConfig",
+    "receipts",
     "coverage",
+    "jfu",
 ]
 
 MIDDLEWARE = [
@@ -92,6 +94,7 @@ TEMPLATES = [
             "context_processors": [
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",
+                "django.template.context_processors.static",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
             ],
@@ -182,3 +185,4 @@ PASSWORD_RESET_TIMEOUT_DAYS = 1
 SLACK_TOKEN = env("SLACK_TOKEN", default=None)
 
 ENABLE_SLACK_INTEGRATION = False
+

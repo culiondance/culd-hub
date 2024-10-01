@@ -21,3 +21,7 @@ if os.environ.get("DEVELOPMENT_DATABASE") == "postgres":
     }
 
 EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "../", "frontend", "build", "static")]
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")

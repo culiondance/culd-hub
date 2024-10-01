@@ -80,19 +80,19 @@ class SubmitReimb(graphene.Mutation):
     reimb = graphene.Field(ReimbursementType)
 
     class Arguments:
-        files = graphene.List(Upload, required=False)
+        receipts = graphene.List(Upload, required=False)
         show = graphene.ID(required = True)
         amount = graphene.Float(required = True)
 
     @staticmethod
-    def mutate(self, info, files, show, amount):
+    def mutate(self, info, receipts, show, amount):
         
         member=Member.objects.get(pk=info.context.user.member.id)
         show_object=Show.objects.get(pk=show)
         date = Now()
-       
+
         reimb_instance = Reimbursement(
-            receipts = files,
+            receipts = receipts,
             show = show_object,
             amount = amount,
             member = member,

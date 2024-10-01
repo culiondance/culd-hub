@@ -3,10 +3,7 @@ from django.db import models
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 
-def get_upload_name(instance, filename):
-    id = instance.user.id
-    date = instance.date.strftime("%d-%m-%y %H:%M:%S")
-    return "user_{0}/{1}".format(id,date)
+from receipts.models import Receipt
 
 
 class Reimbursement(models.Model):
@@ -19,9 +16,9 @@ class Reimbursement(models.Model):
 
     amount = models.DecimalField(null=True, blank=True, decimal_places=2, max_digits=5)
 
-    date = models.DateField(verbose_name="date filled out")
+    date = models.DateField(verbose_name="date filled out", auto_now_add=True)
 
-    receipts = ArrayField(models.ImageField(upload_to=get_upload_name), null = True)
+    receipts = ArrayField(models.ForeignKey(Receipt, on_delete=models.CASCADE, related_name="Reimb"), null = True)
 
     completed = models.BooleanField(default=False, verbose_name="completed")
     
@@ -40,5 +37,6 @@ class Reimbursement(models.Model):
     def delete_receipts(self):
         for image in self.receipts:
             FileSystemStorage.delete(image.name)
+
 
 
