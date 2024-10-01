@@ -1,7 +1,7 @@
 
-import React, { ChangeEvent, Dispatch, SetStateAction} from 'react';
+import React, { ChangeEvent, Dispatch, SetStateAction} from "react";
 
-import { InboxOutlined, UploadOutlined } from "@ant-design/icons";
+//import { InboxOutlined, UploadOutlined } from "@ant-design/icons";
 
 const FileUploadBox = ({setFiles}:{setFiles:Dispatch<SetStateAction<FileList>>}) => {
         const updateUploads = (e: ChangeEvent<HTMLInputElement>) => {
@@ -11,15 +11,11 @@ const FileUploadBox = ({setFiles}:{setFiles:Dispatch<SetStateAction<FileList>>})
         };
 
         return(
+
+
         <input type="file" multiple = {true} onChange = {updateUploads}>
-          <p className="ant-upload-drag-icon">
-            <InboxOutlined />
-          </p>
-          <p className="ant-upload-text">
-            Click or drag file to this area to upload
-          </p>
         </input>);
-}
+};
 
 
 export default FileUploadBox;

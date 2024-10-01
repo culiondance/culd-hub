@@ -46,7 +46,6 @@ INSTALLED_APPS = [
     "reimbs.apps.ReimbsConfig",
     "receipts",
     "coverage",
-    "jfu",
 ]
 
 MIDDLEWARE = [

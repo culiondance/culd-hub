@@ -4,6 +4,12 @@ from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 
 from receipts.models import Receipt
+import time
+
+def get_upload_name(instance, filename):
+    id = instance.user.id
+    unixtime = time.mktime(instance.date.timetuple())
+    return "user_{0}/{1}-{2}".format(id,filename,unixtime)
 
 
 class Reimbursement(models.Model):
@@ -18,7 +24,7 @@ class Reimbursement(models.Model):
 
     date = models.DateField(verbose_name="date filled out", auto_now_add=True)
 
-    receipts = ArrayField(models.ForeignKey(Receipt, on_delete=models.CASCADE, related_name="Reimb"), null = True)
+    #receipts = ArrayField(models.ForeignKey(Receipt, on_delete=models.CASCADE, related_name="Reimb"), null = True)
 
     completed = models.BooleanField(default=False, verbose_name="completed")
     
