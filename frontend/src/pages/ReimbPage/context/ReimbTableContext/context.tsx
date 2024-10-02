@@ -26,13 +26,14 @@ export const ReimbTableProvider: React.FC<Props> = ({ children }: Props) => {
     onError: logoutUser,
   });
   const loading = result.loading;
-  const data: Reimbursement[] = result.data;
-  if (data)
+  const data: {myReimbs:Reimbursement[]} = result.data;
+  if (data){
     return (
-      <ReimbTableContext.Provider value={data}>
+      <ReimbTableContext.Provider value={data.myReimbs}>
         {children}
       </ReimbTableContext.Provider>
     );
+  }
   if (loading) return <div>Loading... </div>;
 };
 

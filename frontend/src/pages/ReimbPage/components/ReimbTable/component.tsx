@@ -13,7 +13,8 @@ import { Show, User, Reimbursement } from "../../../../types/types";
 import { ReimbTableContext } from "../../context/ReimbTableContext/types";
 
 const ReimbTable = () => {
-  const { myReimbs: reimbs } = useContext(ReimbTableContext);
+  const reimbs:Reimbursement[] = useContext(ReimbTableContext);
+  console.log(reimbs);
 
   const columns = [
     {
@@ -89,7 +90,7 @@ const ReimbTable = () => {
     */
   ];
 
-  return <Table dataSource={reimbs} columns={columns} />;
+  return <Table rowKey={reimb => Number(reimb.id)} dataSource={reimbs} columns={columns} />;
 };
 
 export default ReimbTable;

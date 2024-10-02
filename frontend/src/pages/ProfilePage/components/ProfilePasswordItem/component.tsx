@@ -53,7 +53,6 @@ const ProfileItem: React.FC = () => {
     password2: string;
   };
   const onSubmit = async (values: FormValues) => {
-    console.log(values);
     await updatePassword({
       variables: {
         oldPassword: values.oldPassword,
