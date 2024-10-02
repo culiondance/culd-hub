@@ -15,7 +15,7 @@ class ReimbursementAdmin(admin.ModelAdmin):
         "member",
         "show",
         "amount",
-        #"receipts",
+        "my_receipts",
     ]
 
     actions = [mark_complete]
@@ -24,4 +24,4 @@ class ReimbursementAdmin(admin.ModelAdmin):
 
 #admin.site.register(Reimbursement)
 #admin.site.unregister(Reimbursement)
-admin.site.register(Reimbursement)
+admin.site.register(Reimbursement, ReimbursementAdmin)

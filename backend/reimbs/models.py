@@ -3,7 +3,6 @@ from django.db import models
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 
-from receipts.models import Receipt
 import time
 
 def get_upload_name(instance, filename):
@@ -41,8 +40,11 @@ class Reimbursement(models.Model):
             super().save()
     
     def delete_receipts(self):
-        for image in self.receipts:
-            FileSystemStorage.delete(image.name)
+        print(self.receipts)
+
+    def my_receipts(self):
+        # TODO: normalize
+        return(self.receipts)
 
 
 

@@ -8,8 +8,8 @@ import { gql, useMutation} from "@apollo/client";
 import { Dayjs } from "dayjs";
 
 const SUBMIT_REIMB = gql`
-    mutation SubmitReimb($amount: Float!, $show:ID!){
-        submitReimb(show:$show,amount:$amount, files:none){
+    mutation SubmitReimb($amount: Float!, $show:ID!, $receipts:[ID]){
+        submitReimb(show:$show,amount:$amount, receipts:$receipts){
             reimb{
                 id
             }
@@ -23,6 +23,14 @@ const MY_SHOWS = gql`
 	    id
 	    name
 	    date
+    }
+  }
+`;
+
+const UPLOAD_RECEIPTS = gql`
+  mutation ($receipts: [Upload]!) {
+    uploadReceipts(receipts: $receipts) {
+      ids
     }
   }
 `;
@@ -42,7 +50,7 @@ const SubmitButton = ({form}:{form:FormInstance}) => {
   }, [form, values]);
 
   return (
-    <Button type="primary" htmlType="submit" disabled={!submittable}/>
+    <Button type="primary" htmlType="submit" disabled={!submittable}> Submit </Button>
   );
 };
 
@@ -59,9 +67,10 @@ function get_shows(SetOptions){
 
 
 type FieldType = {
-  Amount?: number;
-  Show?: number;
-  Description?: string;
+  Amount: number;
+  Show: number;
+  Description: string;
+  Receipt: FileList;
 };
 
 const formItemLayout = {
@@ -95,23 +104,39 @@ const ReimbForm = () => {
   };
 
   type FormValues = {
-    show: number,
-    amount: number,
-    files: string[],
-    description:string,
+    Show: number,
+    Amount: number,
+    Description:string,
   };
 
-  const [submitForm] = useAuthMutation(SUBMIT_REIMB, {});
 
-  function submit_form(values:FormValues) {
-      //const vars = {show:values.show.id, amount:values.amount};
-      const vars = {show:values.show, amount:values.amount};
-      console.log(values);
-      submitForm({variables: vars});
-      //setIsModalOpen(false);
-  }
 
   const [files, setFiles] = useState<FileList>(null);
+
+  const [upload_mutation] = useAuthMutation(UPLOAD_RECEIPTS, {});
+  const [submit_mutation] = useAuthMutation(SUBMIT_REIMB,{});
+
+
+  async function upload_receipts(){
+      const result = await upload_mutation({variables:{receipts:files}});
+      return result.data.uploadReceipts.ids;
+  }
+
+  async function submit_form({Show, Amount}:FormValues) {
+      console.log(Show,Amount);
+      const ids = await upload_receipts().catch(() => null);
+      if (ids){
+        console.log(Show,Amount);
+        const vars = {show:Show, amount:Amount, receipts:ids};
+        console.log("mutating with vars",vars);
+        submit_mutation({variables:vars});
+      }else{
+          console.log("got error");
+      }
+      setIsModalOpen(false);
+  }
+
+
 
   return (
     <>
@@ -131,17 +156,17 @@ const ReimbForm = () => {
           onFinish={submit_form}
           {...formItemLayout}
         >
-          <Form.Item<FieldType> name="Show" label="show" rules={[{required: true}]}>
+          <Form.Item<FieldType> name="Show" label="Show" rules={[{required: true}]}>
             <Select placeholder="Select a show">{shows}</Select>
           </Form.Item>
-          <Form.Item<FieldType> name="Amount" label="amount" rules={[{required: true}]}>
+          <Form.Item<FieldType> name="Amount" label="Amount" rules={[{required: true}]}>
             <InputNumber />
           </Form.Item>
-          <Form.Item<FieldType> name="Description" label="description" rules={[{required: true}]}>
+          <Form.Item<FieldType> name="Description" label="Description" rules={[{required: true}]}>
             <Input.TextArea />
           </Form.Item>
 	<Form.Item
-        name="receipts"
+        name="Receipts"
 	label = "Receipts"
         valuePropName="fileList"
         getValueFromEvent={normFile}
