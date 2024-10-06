@@ -8,8 +8,8 @@ import { gql, useMutation} from "@apollo/client";
 import { Dayjs } from "dayjs";
 
 const SUBMIT_REIMB = gql`
-    mutation SubmitReimb($amount: Float!, $show:ID!, $receipts:[ID]){
-        submitReimb(show:$show,amount:$amount, receipts:$receipts){
+    mutation SubmitReimb($amount: Float!, $show:ID!, $receipts:[ID], $description:String){
+        submitReimb(show:$show,amount:$amount, receipts:$receipts, description:$description){
             reimb{
                 id
             }
@@ -27,13 +27,6 @@ const MY_SHOWS = gql`
   }
 `;
 
-const UPLOAD_RECEIPTS = gql`
-  mutation ($receipts: [Upload]!) {
-    uploadReceipts(receipts: $receipts) {
-      ids
-    }
-  }
-`;
 
 
 const SubmitButton = ({form}:{form:FormInstance}) => {
@@ -113,26 +106,13 @@ const ReimbForm = () => {
 
   const [files, setFiles] = useState<FileList>(null);
 
-  const [upload_mutation] = useAuthMutation(UPLOAD_RECEIPTS, {});
   const [submit_mutation] = useAuthMutation(SUBMIT_REIMB,{});
 
 
-  async function upload_receipts(){
-      const result = await upload_mutation({variables:{receipts:files}});
-      return result.data.uploadReceipts.ids;
-  }
-
   async function submit_form({Show, Amount}:FormValues) {
-      console.log(Show,Amount);
-      const ids = await upload_receipts().catch(() => null);
-      if (ids){
-        console.log(Show,Amount);
-        const vars = {show:Show, amount:Amount, receipts:ids};
+        const vars = {show:Show, amount:Amount, receipts:files};
         console.log("mutating with vars",vars);
         submit_mutation({variables:vars});
-      }else{
-          console.log("got error");
-      }
       setIsModalOpen(false);
   }
 
