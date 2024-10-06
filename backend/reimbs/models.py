@@ -22,8 +22,10 @@ class Reimbursement(models.Model):
     amount = models.DecimalField(null=True, blank=True, decimal_places=2, max_digits=5)
 
     date = models.DateField(verbose_name="date filled out", auto_now_add=True)
+    
+    description = models.TextField(null = True)
 
-    #receipts = ArrayField(models.ForeignKey(Receipt, on_delete=models.CASCADE, related_name="Reimb"), null = True)
+    receipt = ArrayField(models.ImageField(upload_to=get_upload_name), null= True)
 
     completed = models.BooleanField(default=False, verbose_name="completed")
     
