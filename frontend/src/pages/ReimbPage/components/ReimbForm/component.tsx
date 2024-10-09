@@ -8,7 +8,7 @@ import { gql, useMutation} from "@apollo/client";
 import { Dayjs } from "dayjs";
 
 const SUBMIT_REIMB = gql`
-    mutation SubmitReimb($amount: Float!, $show:ID!, $receipts:[Upload]!, $description:String){
+    mutation SubmitReimb($amount: Float!, $show:ID!, $receipts:[Upload!]!, $description:String){
         submitReimb(show:$show,amount:$amount, receipts:$receipts, description:$description){
             reimb{
                 id
@@ -106,7 +106,7 @@ const ReimbForm = () => {
 
   const [files, setFiles] = useState<FileList>(null);
 
-  const [submit_mutation] = useAuthMutation(SUBMIT_REIMB,{});
+  const [submit_mutation] = useAuthMutation(SUBMIT_REIMB,{onCompleted: ()=> {console.log("mutation completed")}});
 
 
   async function submit_form({Show, Amount, Description}:FormValues) {

@@ -5,6 +5,7 @@ import React, { ChangeEvent, Dispatch, SetStateAction} from "react";
 
 const FileUploadBox = ({setFiles}:{setFiles:Dispatch<SetStateAction<FileList>>}) => {
         const updateUploads = (e: ChangeEvent<HTMLInputElement>) => {
+            console.log("updating files");
           if (e.target.files) {
             setFiles(e.target.files);
           }
@@ -13,7 +14,7 @@ const FileUploadBox = ({setFiles}:{setFiles:Dispatch<SetStateAction<FileList>>})
         return(
 
 
-        <input type="file" multiple = {true} onChange = {updateUploads}>
+        <input type="file" multiple onChange = {updateUploads}>
         </input>);
 };
 

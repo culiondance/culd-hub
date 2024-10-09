@@ -19,7 +19,7 @@ class Reimbursement(models.Model):
         "shows.Show", related_name="show", on_delete=models.CASCADE, null=True
     )
 
-    amount = models.DecimalField(null=True, blank=True, decimal_places=2, max_digits=5)
+    amount = models.DecimalField(null=True, blank=True, decimal_places=2, max_digits=10)
 
     date = models.DateField(verbose_name="date filled out", auto_now_add=True)
     

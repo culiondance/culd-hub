@@ -12,9 +12,9 @@ import {
 import {
   ApolloClient,
   ApolloError,
-  createHttpLink,
   InMemoryCache,
 } from "@apollo/client";
+import createUploadLink from "apollo-upload-client/createUploadLink.mjs";
 import { setContext } from "@apollo/client/link/context";
 export const AuthContext = createContext(undefined);
 
@@ -107,7 +107,7 @@ export const AuthProvider: React.FC<Props> = ({ children }: Props) => {
 
   useEffect(() => {
     if (authTokens) {
-      const httpLink = createHttpLink({
+      const httpLink = createUploadLink({
         uri: "/graphql/",
       });
 
