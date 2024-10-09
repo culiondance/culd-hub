@@ -25,7 +25,7 @@ class Reimbursement(models.Model):
     
     description = models.TextField(null = True)
 
-    receipt = ArrayField(models.ImageField(upload_to=get_upload_name), null= True)
+    receipts = ArrayField(models.ImageField(upload_to=get_upload_name), null= True)
 
     completed = models.BooleanField(default=False, verbose_name="completed")
     

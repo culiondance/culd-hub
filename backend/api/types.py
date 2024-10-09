@@ -7,7 +7,6 @@ from common.exceptions import WrongUsage
 from shows.models import Member, Show, Round, Contact, Role
 from users.models import User
 from reimbs.models import Reimbursement
-from receipts.models import Receipt
 
 
 class UserType(DjangoObjectType):
@@ -61,12 +60,6 @@ class ShowType(DjangoObjectType):
 
     def resolve_is_pending(self, info):
         return self.pending  # noqa
-
-class ReceiptType(DjangoObjectType):
-    class Meta:
-        model = Receipt
-        fields = ("receipt", "source" )
-
 
 class ReimbursementType(DjangoObjectType):
     class Meta:

@@ -17,7 +17,6 @@ from .bases import DynamicArgsMixin
 from .types import RoleType, ReimbursementType
 
 from reimbs.models import Reimbursement
-from receipts.models import Receipt
 
 
 class CreateRoleMutation(graphene.Mutation):
@@ -90,9 +89,11 @@ class SubmitReimb(graphene.Mutation):
         
         member=Member.objects.get(pk=info.context.user.member.id)
         show_object=Show.objects.get(pk=show)
-       
+        
         print("receipts:",receipts)
-
+    
+        for receipt in receipts:
+            print(receipt, type(receipt), dir(receipt))
 
         reimb_instance = Reimbursement(
             show = show_object,

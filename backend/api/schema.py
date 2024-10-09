@@ -9,7 +9,6 @@ from graphql_jwt.refresh_token.signals import refresh_token_rotated
 from reimbs.models import Reimbursement
 from shows.models import Member, Show, Role
 from users.models import User
-from receipts.models import Receipt
 from .mutations import (
     CreateRoleMutation,
     DeleteRoleMutation,
@@ -22,9 +21,8 @@ from .mutations import (
     CompleteReimb,
     DeleteReimb,
     SubmitReimb,
-    UploadReceipts,
 )
-from .types import UserType, MemberType, ShowType, ReimbursementType, ReceiptType
+from .types import UserType, MemberType, ShowType, ReimbursementType
 
 
 @receiver(refresh_token_rotated)
@@ -44,7 +42,6 @@ class Query(graphene.ObjectType):
     me = graphene.Field(UserType)
     reimbs = graphene.List(ReimbursementType)
     my_reimbs = graphene.List(ReimbursementType)
-    receipts = graphene.List(ReceiptType)
 
     school_choices = graphene.String()
     class_year_choices = graphene.String()
@@ -57,9 +54,6 @@ class Query(graphene.ObjectType):
     def resolve_reimbs(root, info, **kwargs):
         return Reimbursement.objects.all()
 
-    @staticmethod
-    def resolve_receipts(root, info, **kwargs):
-        return Receipt.objects.all()
 
     @staticmethod
     @staff_member_required
@@ -142,7 +136,6 @@ class Mutation(graphene.ObjectType):
     delete_reimb = DeleteReimb.Field()
     submit_reimb = SubmitReimb.Field()
 
-    upload_receipts = UploadReceipts.Field()
 
 
 schema = graphene.Schema(query=Query, mutation=Mutation)  # noqa

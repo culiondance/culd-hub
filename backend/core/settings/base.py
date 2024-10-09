@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     "shows.apps.ShowsConfig",
     "slack.apps.SlackConfig",
     "reimbs.apps.ReimbsConfig",
-    "receipts.apps.ReceiptsConfig",
     "coverage",
 ]
 
