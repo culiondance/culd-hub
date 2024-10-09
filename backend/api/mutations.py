@@ -90,6 +90,9 @@ class SubmitReimb(graphene.Mutation):
         
         member=Member.objects.get(pk=info.context.user.member.id)
         show_object=Show.objects.get(pk=show)
+       
+        print("receipts:",receipts)
+
 
         reimb_instance = Reimbursement(
             show = show_object,

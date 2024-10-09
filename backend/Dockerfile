@@ -1,5 +1,9 @@
 # Use an official Python runtime as a parent image
-FROM python:3.9-alpine AS setup
+FROM python:3.9-alpine AS uv
+RUN pip install uv
+
+
+FROM uv AS setup
 
 # Adding backend directory to make absolute filepaths consistent across services
 WORKDIR /app/backend
@@ -12,7 +16,7 @@ RUN  \
     apk add bash && \
     apk add --no-cache postgresql-libs && \
     apk add --no-cache --virtual .build-deps gcc musl-dev postgresql-dev && \
-    pip3 install --upgrade pip -r requirements.txt && \
+    uv pip install --system --upgrade pip -r requirements.txt && \
     apk --purge del .build-deps
 
 FROM setup AS build
