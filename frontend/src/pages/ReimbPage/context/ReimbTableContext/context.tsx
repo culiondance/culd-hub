@@ -21,20 +21,21 @@ export const ReimbTableProvider: React.FC<Props> = ({ children }: Props) => {
   const { logoutUser } = useContext(AuthContext);
   const { user }: { user: User } = useContext(UserContext);
   const id = user.id;
-  const result = useAuthQuery(GET_REIMBS_QUERY, {
+
+  useAuthQuery(GET_REIMBS_QUERY, {
     variables: { id },
     onError: logoutUser,
+    onCompleted: ({myReimbs}) => (SetReimbColumns(myReimbs)),
   });
-  const loading = result.loading;
-  const data: {myReimbs:Reimbursement[]} = result.data;
-  if (data){
+
+  const [reimb_columns, SetReimbColumns] = useState<Reimbursement[]>([]);
+
+
     return (
-      <ReimbTableContext.Provider value={data.myReimbs}>
+      <ReimbTableContext.Provider value={reimb_columns}>
         {children}
       </ReimbTableContext.Provider>
     );
-  }
-  if (loading) return <div>Loading... </div>;
 };
 
 export default ReimbTableProvider;
@@ -50,6 +51,10 @@ const GET_REIMBS_QUERY = gql`
       date
       completed
       id
+      receipts{
+          receipt
+      }
     }
   }
 `;
+

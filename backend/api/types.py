@@ -6,7 +6,7 @@ from graphene_django.utils import camelize
 from common.exceptions import WrongUsage
 from shows.models import Member, Show, Round, Contact, Role
 from users.models import User
-from reimbs.models import Reimbursement
+from reimbs.models import Reimbursement, Receipt
 
 
 class UserType(DjangoObjectType):
@@ -66,6 +66,10 @@ class ReimbursementType(DjangoObjectType):
         model = Reimbursement
         fields = ("id", "member", "show", "amount", "date", "completed", "receipts")
 
+class ReceiptType(DjangoObjectType):
+    class Meta:
+        model = Receipt
+        fields = ("receipt", "reimb")
 
 class RoundType(DjangoObjectType):
     class Meta:

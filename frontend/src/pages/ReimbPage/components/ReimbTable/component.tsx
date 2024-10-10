@@ -16,6 +16,21 @@ const ReimbTable = () => {
   const reimbs:Reimbursement[] = useContext(ReimbTableContext);
   console.log(reimbs);
 
+  function render_receipts(receipts: {receipt:string}[]){
+      console.log(receipts);
+      const new_receipts = receipts.map((receipt,index) => {
+          const url = window.location.origin.toString() + "/receipts/" + receipt.receipt;
+          console.log(`url ${url}`);
+          return <Image width={200} src={url} key = {index}></Image>
+      });
+      return(
+        <Image.PreviewGroup>
+            {new_receipts}
+        </Image.PreviewGroup>
+      );
+  }
+
+
   const columns = [
     {
       title: "completed",
@@ -78,16 +93,14 @@ const ReimbTable = () => {
         );
       },
     },
-    /*,
     {
       title: "receipts",
       key: "receipts",
       dataIndex: "receipts",
-      render: () => {
-        return <Image></Image>;
+      render: (receipts:{receipt:string}[]) => {
+        return render_receipts(receipts);
       },
     },
-    */
   ];
 
   return <Table rowKey={reimb => Number(reimb.id)} dataSource={reimbs} columns={columns} />;

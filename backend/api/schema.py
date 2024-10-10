@@ -6,7 +6,7 @@ from django.dispatch import receiver
 from graphql_jwt.decorators import login_required, staff_member_required
 from graphql_jwt.refresh_token.signals import refresh_token_rotated
 
-from reimbs.models import Reimbursement
+from reimbs.models import Reimbursement, Receipt
 from shows.models import Member, Show, Role
 from users.models import User
 from .mutations import (
@@ -22,7 +22,7 @@ from .mutations import (
     DeleteReimb,
     SubmitReimb,
 )
-from .types import UserType, MemberType, ShowType, ReimbursementType
+from .types import UserType, MemberType, ShowType, ReimbursementType, ReceiptType
 
 
 @receiver(refresh_token_rotated)
@@ -42,6 +42,7 @@ class Query(graphene.ObjectType):
     me = graphene.Field(UserType)
     reimbs = graphene.List(ReimbursementType)
     my_reimbs = graphene.List(ReimbursementType)
+    receipts = graphene.List(ReceiptType)
 
     school_choices = graphene.String()
     class_year_choices = graphene.String()
@@ -86,9 +87,14 @@ class Query(graphene.ObjectType):
     @staticmethod
     def resolve_my_reimbs(root, info, **kwargs):
         me = User.objects.get(pk=info.context.user.pk).member
-        if me is not None:
-            return me.reimbs.all()
-        return None
+        if me is None:
+            return None
+        return me.reimbs.all()
+
+    @staticmethod
+    def resolve_receipts(root, info, **kwargs):
+        receipts = Receipt.objects.all()
+        return receipts
 
     @staticmethod
     def resolve_school_choices(root, info, **kwargs):
@@ -113,6 +119,9 @@ class Query(graphene.ObjectType):
     @staticmethod
     def resolve_performance_role_choices(root, info, **kwargs):
         return tuple_to_json(Role.ROLES)
+
+
+
 
 
 class Mutation(graphene.ObjectType):

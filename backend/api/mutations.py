@@ -2,6 +2,7 @@ import graphene
 import time
 from django.db.models.functions import Now
 from django.db import models
+from django.core.files import File
 from graphene_file_upload.scalars import Upload
 from shows.models import Show, Member, Role
 from users.models import User
@@ -16,8 +17,7 @@ from users.mixins import (
 from .bases import DynamicArgsMixin
 from .types import RoleType, ReimbursementType
 
-from reimbs.models import Reimbursement
-from reimbs.forms import ReimbursementForm
+from reimbs.models import Reimbursement, Receipt
 
 
 class CreateRoleMutation(graphene.Mutation):
@@ -90,22 +90,22 @@ class SubmitReimb(graphene.Mutation):
         
         member=Member.objects.get(pk=info.context.user.member.id)
         show_object=Show.objects.get(pk=show)
-        receipts_field = []
-        for receipt in receipts:
-            new_field = models.ImageField(receipt)
-            receipts_field.append(new_field)
-        
+       
         reimb_instance = Reimbursement(
             show = show_object,
             amount = amount,
             member = member,
             description = description,
-            receipts = receipts_field,
         )
         reimb_instance.save()
 
-        return SubmitReimb(reimb = reimb_instance)
+        for r in receipts:
+            file = r.open()
+            receipt = Receipt(receipt = file, reimb= reimb_instance)
+            receipt.save()
 
+
+        return SubmitReimb(reimb = reimb_instance)
 
 
 

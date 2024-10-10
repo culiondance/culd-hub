@@ -4,11 +4,16 @@ from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 
 import time
+import pathlib
+
 
 def get_upload_name(instance, filename):
-    id = instance.user.id
-    unixtime = time.mktime(instance.date.timetuple())
-    return "user_{0}/{1}-{2}".format(id,filename,unixtime)
+    reimb = instance.reimb
+    id = reimb.member.id
+    extension = pathlib.Path(filename).suffix
+    unixtime = time.mktime(reimb.date.timetuple())
+    return "user_{0}/{1}-{2}{3}".format(id,filename,unixtime, extension)
+
 
 
 class Reimbursement(models.Model):
@@ -24,8 +29,6 @@ class Reimbursement(models.Model):
     date = models.DateField(verbose_name="date filled out", auto_now_add=True)
     
     description = models.TextField(null = True)
-
-    receipts = ArrayField(models.ImageField(upload_to=get_upload_name), null= True)
 
     completed = models.BooleanField(default=False, verbose_name="completed")
     
@@ -44,9 +47,19 @@ class Reimbursement(models.Model):
     def delete_receipts(self):
         print(self.receipts)
 
-    def my_receipts(self):
-        # TODO: normalize
-        return(self.receipts)
+    def reimb_receipts(self):
+        response = u''
+        for receipt in self.receipts.all():
+            response+= u'<img src="%s"/>' %receipt.receipt.path
+        return response
 
+
+    reimb_receipts.short_description = 'Image'
+    reimb_receipts.allow_tags = True
+
+
+class Receipt(models.Model):
+    receipt = models.ImageField(upload_to=get_upload_name)
+    reimb = models.ForeignKey(Reimbursement, on_delete=models.CASCADE, related_name="receipts")
 
 

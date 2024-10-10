@@ -7,7 +7,7 @@ from core.settings.base import *
 
 DEBUG = True
 
-ALLOWED_HOSTS = ["backend", "localhost", "127.0.0.1", "culd-hub.fly.dev"]
+ALLOWED_HOSTS = ["backend", "localhost", "127.0.0.1", "culd-hub.fly.dev", "media.localhost"]
 
 if os.environ.get("DEVELOPMENT_DATABASE") == "postgres":
     DATABASES = {
