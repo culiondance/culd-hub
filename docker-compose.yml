@@ -3,7 +3,6 @@ services:
     build: ./backend
     volumes:
       - ./backend:/app/backend
-      - receipts: /app/backend/media
     ports:
       - "8000:8000"
     stdin_open: true
@@ -32,18 +31,3 @@ services:
     command: yarn start
   db:
     image: postgres:11.1-alpine
-  caddy:
-    image: caddy:2.8.4-alpine
-    volumes:
-      - ./Caddyfile:/etc/caddy/Caddyfile
-      - receipts:/srv
-      - caddy_data:/data
-      - caddy_config:/config
-
-
-volumes:
-  caddy_data:
-    external: true
-  caddy_config:
-  receipts:
-    external: true

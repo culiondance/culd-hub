@@ -19,7 +19,8 @@ const ReimbTable = () => {
   function render_receipts(receipts: {receipt:string}[]){
       console.log(receipts);
       const new_receipts = receipts.map((receipt,index) => {
-          const url = window.location.origin.toString() + "/receipts/" + receipt.receipt;
+          const url_1 = window.location.origin.toString() + "/receipts/" + receipt.receipt;
+          const url = "http://localhost:8000/receipts/" + receipt.receipt;
           console.log(`url ${url}`);
           return <Image width={200} src={url} key = {index}></Image>
       });

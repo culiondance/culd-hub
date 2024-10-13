@@ -15,8 +15,7 @@ admin.site.site_title = "CULD Hub"
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("graphql/", csrf_exempt(FileUploadGraphQLView.as_view(graphiql=True))),
-    re_path(".*", TemplateView.as_view(template_name="index.html")),
+    #re_path(".*", TemplateView.as_view(template_name="index.html")),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-
 
 
