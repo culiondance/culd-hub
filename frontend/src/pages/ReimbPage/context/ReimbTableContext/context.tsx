@@ -54,6 +54,7 @@ const GET_REIMBS_QUERY = gql`
       receipts{
           receipt
       }
+      description
     }
   }
 `;

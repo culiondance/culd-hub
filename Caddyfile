@@ -1,0 +1,3 @@
+receipts.{$ROOT_URL}
+	root * /srv
+	file_server

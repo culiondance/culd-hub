@@ -19,10 +19,13 @@ const ReimbTable = () => {
   function render_receipts(receipts: {receipt:string}[]){
       console.log(receipts);
       const new_receipts = receipts.map((receipt,index) => {
-          const url_1 = window.location.origin.toString() + "/receipts/" + receipt.receipt;
-          const url = "http://localhost:8000/receipts/" + receipt.receipt;
+          const hostname = window.location.hostname.toString();
+          const protocol = window.location.protocol.toString();
+          const url = "https://receipts." + hostname + ":9000/" + receipt.receipt;
+          //const url_1 = "receipts." + window.location.origin.toString() + "/" +  receipt.receipt;
+          //const url = "https://localhost:9000/" + receipt.receipt;
           console.log(`url ${url}`);
-          return <Image width={200} src={url} key = {index}></Image>
+          return <Image src={url} key = {index} height = {75} width = {75} preview = {{maxScale: 100}}></Image>
       });
       return(
         <Image.PreviewGroup>
@@ -95,6 +98,14 @@ const ReimbTable = () => {
       },
     },
     {
+      title: "description",
+      key: "description",
+      dataIndex: "description",
+      render: (receipts) => 
+      (<p>{receipts}</p>)
+      ,
+    },
+    {
       title: "receipts",
       key: "receipts",
       dataIndex: "receipts",
@@ -102,7 +113,7 @@ const ReimbTable = () => {
         return render_receipts(receipts);
       },
     },
-  ];
+      ];
 
   return <Table rowKey={reimb => Number(reimb.id)} dataSource={reimbs} columns={columns} />;
 };

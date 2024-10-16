@@ -3,6 +3,7 @@ services:
     build: ./backend
     volumes:
       - ./backend:/app/backend
+      - user_media:/app/backend/media
     ports:
       - "8000:8000"
     stdin_open: true
@@ -31,3 +32,21 @@ services:
     command: yarn start
   db:
     image: postgres:11.1-alpine
+
+  caddy:
+    image: caddy:2.8-alpine
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+      - user_media:/srv
+      - caddy_data:/data
+      - caddy_config:/config
+    environment:
+      - ROOT_URL=localhost
+    ports:
+      - "9000:443"
+
+volumes:
+  user_media:
+  caddy_data:
+  caddy_config:
+
