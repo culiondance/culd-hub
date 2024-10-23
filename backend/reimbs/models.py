@@ -53,13 +53,22 @@ class Reimbursement(models.Model):
             response+= u'<img src="%s"/>' %receipt.receipt.path
         return response
 
+    def get_receipts(self):
+        receipt_list = self.receipts.all()
+        if receipt_list is None:
+            return None
+        return receipt_list[0].receipts.all()
+
 
     reimb_receipts.short_description = 'Image'
     reimb_receipts.allow_tags = True
 
+class ReceiptList(models.Model):
+    reimb = models.ForeignKey(Reimbursement, on_delete=models.CASCADE, related_name="receipts")
+
 
 class Receipt(models.Model):
     receipt = models.ImageField(upload_to=get_upload_name)
-    reimb = models.ForeignKey(Reimbursement, on_delete=models.CASCADE, related_name="receipts")
+    Collection = models.ForeignKey(ReceiptList, on_delete=models.CASCADE, related_name="receipts")
 
 

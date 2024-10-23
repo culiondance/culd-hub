@@ -137,7 +137,7 @@ const ReimbForm = () => {
           <Form.Item<FieldType> name="Show" label="Show" rules={[{required: true}]}>
             <Select placeholder="Select a show">{shows}</Select>
           </Form.Item>
-          <Form.Item<FieldType> name="Amount" label="Amount" rules={[{required: true}]}>
+          <Form.Item<FieldType> name="Amount" label="Amount" rules={[{required: true, type: "number"}]}>
             <InputNumber />
           </Form.Item>
           <Form.Item<FieldType> name="Description" label="Description" rules={[{required: true}]}>
