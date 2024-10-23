@@ -21,6 +21,8 @@ from .mutations import (
     CompleteReimb,
     DeleteReimb,
     SubmitReimb,
+    UploadReceipts,
+    DeleteReceipt,
 )
 from .types import UserType, MemberType, ShowType, ReimbursementType, ReceiptType
 
@@ -145,6 +147,8 @@ class Mutation(graphene.ObjectType):
     complete_reimb = CompleteReimb.Field()
     delete_reimb = DeleteReimb.Field()
     submit_reimb = SubmitReimb.Field()
+    upload_receipts = UploadReceipts.Field()
+    delete_receipts = DeleteReceipt.Field()
 
 
 

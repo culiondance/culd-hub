@@ -29,7 +29,7 @@ const MY_SHOWS = gql`
 
 
 
-const SubmitButton = ({form}:{form:FormInstance}) => {
+const SubmitButton = ({form, uploading}:{form:FormInstance, uploading: boolean}) => {
   const [submittable, setSubmittable] = React.useState<boolean>(false);
 
   // Watch all values
@@ -38,7 +38,12 @@ const SubmitButton = ({form}:{form:FormInstance}) => {
   React.useEffect(() => {
     form
       .validateFields({ validateOnly: true })
-      .then(() => setSubmittable(true))
+      .then(() => {
+          if(!uploading){
+              {setSubmittable(true);
+            }
+      }}
+           )
       .catch(() => setSubmittable(false));
   }, [form, values]);
 
@@ -103,14 +108,15 @@ const ReimbForm = () => {
   };
 
 
+  const [receipt_list, set_receipt_list] = useState<number>(null);
 
-  const [files, setFiles] = useState<FileList>(null);
+  const [uploading, set_uploading] = useState<boolean>(false);
 
   const [submit_mutation] = useAuthMutation(SUBMIT_REIMB,{onCompleted: ()=> {console.log("mutation completed")}});
 
 
   async function submit_form({Show, Amount, Description}:FormValues) {
-        const vars = {show:Show, amount:Amount, receipts:files, description:Description};
+        const vars = {show:Show, amount:Amount, receipts:receipt_list, description:Description};
         console.log("mutating with vars",vars);
         submit_mutation({variables:vars});
       setIsModalOpen(false);
@@ -149,12 +155,11 @@ const ReimbForm = () => {
         valuePropName="fileList"
         getValueFromEvent={normFile}
       >
-        <FileUploadBox setFiles = {setFiles}></FileUploadBox>
+        <FileUploadBox Collection = {[receipt_list, set_receipt_list]} setUploading = {set_uploading}></FileUploadBox>
       </Form.Item>
           <Form.Item >
-            <SubmitButton form={form}/>
+            <SubmitButton form={form} uploading={uploading}/>
           </Form.Item>
-
         </Form>
       </Modal>
     </>

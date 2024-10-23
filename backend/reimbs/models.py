@@ -8,10 +8,9 @@ import pathlib
 
 
 def get_upload_name(instance, filename):
-    reimb = instance.reimb
-    id = reimb.member.id
+    id = instance.id
     extension = pathlib.Path(filename).suffix
-    unixtime = time.mktime(reimb.date.timetuple())
+    unixtime = time.time()
     return "user_{0}/{1}-{2}{3}".format(id,filename,unixtime, extension)
 
 
@@ -49,26 +48,23 @@ class Reimbursement(models.Model):
 
     def reimb_receipts(self):
         response = u''
-        for receipt in self.receipts.all():
+        for receipt in self.get_receipts():
             response+= u'<img src="%s"/>' %receipt.receipt.path
         return response
 
     def get_receipts(self):
-        receipt_list = self.receipts.all()
-        if receipt_list is None:
-            return None
-        return receipt_list[0].receipts.all()
-
+        receipt_list = self.receipts.values("receipts")
+        return receipt_list
 
     reimb_receipts.short_description = 'Image'
     reimb_receipts.allow_tags = True
 
 class ReceiptList(models.Model):
-    reimb = models.ForeignKey(Reimbursement, on_delete=models.CASCADE, related_name="receipts")
+    reimb = models.ForeignKey(Reimbursement, on_delete=models.CASCADE, related_name="receipts", null=False)
 
 
 class Receipt(models.Model):
-    receipt = models.ImageField(upload_to=get_upload_name)
-    Collection = models.ForeignKey(ReceiptList, on_delete=models.CASCADE, related_name="receipts")
+    image = models.ImageField(upload_to=get_upload_name)
+    collection = models.ForeignKey(ReceiptList, on_delete=models.CASCADE, related_name="receipts", null = True)
 
 

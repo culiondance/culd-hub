@@ -15,9 +15,9 @@ from users.mixins import (
     UpdatePasswordMixin,
 )
 from .bases import DynamicArgsMixin
-from .types import RoleType, ReimbursementType
+from .types import RoleType, ReimbursementType, ReceiptListType
 
-from reimbs.models import Reimbursement, Receipt
+from reimbs.models import Reimbursement, Receipt, ReceiptList
 
 
 class CreateRoleMutation(graphene.Mutation):
@@ -80,7 +80,7 @@ class SubmitReimb(graphene.Mutation):
     reimb = graphene.Field(ReimbursementType)
 
     class Arguments:
-        receipts = graphene.List(Upload, required=False)
+        receipts = graphene.ID(required=False)
         show = graphene.ID(required = True)
         amount = graphene.Float(required = True)
         description = graphene.String(required=False)
@@ -106,6 +106,48 @@ class SubmitReimb(graphene.Mutation):
 
 
         return SubmitReimb(reimb = reimb_instance)
+
+
+class UploadReceipts(graphene.Mutation):
+    id = graphene.ID()
+    receipt_list = graphene.Field(ReceiptListType)
+
+    class Arguments:
+        receipts = graphene.List(Upload, required=True)
+        collection = graphene.ID(required = False)
+
+    @staticmethod
+    def mutate(self, info, **kwargs):
+
+        ids = [] 
+        if "collection" in kwargs:
+            receipt_list = ReceiptList.objects.get(pk=kwargs["collection"])
+            ids = [receipt.id for receipt in receipt_list]
+
+        receipts = kwargs["receipts"]
+        print(receipts)
+
+
+        for r in receipts:
+            file = r.open()
+            receipt = Receipt(image = file)
+            receipt.save()
+            ids.append(receipt.id)
+        return UploadReceipts(id = ids)
+
+
+class DeleteReceipt(graphene.Mutation):
+    done = graphene.Boolean()
+    class Arguments:
+        receipt_ids = graphene.List(Upload, required=True)
+   
+    @staticmethod
+    def mutate(self, info, receipt_ids):
+        Receipt.objects.filter(id__in=receipt_ids).delete()
+        return DeleteReceipt(True)
+
+   
+
 
 
 

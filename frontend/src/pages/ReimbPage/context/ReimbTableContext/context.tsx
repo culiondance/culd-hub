@@ -52,7 +52,9 @@ const GET_REIMBS_QUERY = gql`
       completed
       id
       receipts{
-          receipt
+          receipts{
+              image
+          }
       }
       description
     }
