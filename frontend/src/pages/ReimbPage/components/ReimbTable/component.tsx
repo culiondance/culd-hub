@@ -35,7 +35,7 @@ const ReimbTable = () => {
       );
   }
 
-  console.log("rerender");
+  console.log("rerender. reimbs is now:",reimbs);
 
 
   const columns = [

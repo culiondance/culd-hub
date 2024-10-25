@@ -36,17 +36,12 @@ export const ReimbTableProvider: React.FC<Props> = ({ children }: Props) => {
     variables: { id },
     onError: logoutUser,
     onCompleted: ({myReimbs}) => {
-        console.log("updating reimb columns");
         SetReimbColumns(myReimbs);
+        console.log("updated reimb columns to length",myReimbs.length);
     },
+    fetchPolicy: "network-only",
+    nextFetchPolicy: "network-only",
   });
-
-    if(NeedsRefresh){
-        console.log("set needs refresh false");
-        SetNeedsRefresh(false);
-        GetReimbs();
-    }
-
 
   useEffect(() => {
     const fetchReimbs = async () => {
@@ -54,14 +49,6 @@ export const ReimbTableProvider: React.FC<Props> = ({ children }: Props) => {
     };
     fetchReimbs().catch(console.error);
   }, [NeedsRefresh, GetReimbs]);
-
-/*
-    useEffect(() => {
-        
-        console.log(NeedsRefresh);
-        GetReimbs();
-    },[NeedsRefresh]);
-    */
 
 
   const [reimb_columns, SetReimbColumns] = useState<Reimbursement[]>([]);

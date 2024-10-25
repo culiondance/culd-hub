@@ -64,7 +64,9 @@ function get_shows(SetOptions){
               show => <Select.Option value={show.id} key={show.id}>{show.name}</Select.Option>
             );
           SetOptions(options);
-        }
+        },
+        fetchPolicy: "network-only",
+        nextFetchPolicy: "network-only",
     })
 }
 
@@ -118,9 +120,12 @@ const ReimbForm = () => {
   const [uploading, set_uploading] = useState<boolean>(false);
 
   const [submit_mutation] = useAuthMutation(SUBMIT_REIMB,{onCompleted: ()=> {
+    
+        console.log("submitted reimbursement, about to update needs refresh");
+        needs_refresh(true); 
 
-    needs_refresh(true); 
-      console.log("test");
+        console.log("updated needs refresh");
+        //print("")
     }});
 
 
@@ -130,8 +135,6 @@ const ReimbForm = () => {
   async function submit_form({Show, Amount, Description}:FormValues) {
         const vars = {show:Show, amount:Amount, receipts:list_id, description:Description};
         submit_mutation({variables:vars});
-        console.log("updating needs refresh");
-    needs_refresh(true); 
       setIsModalOpen(false);
   }
 
