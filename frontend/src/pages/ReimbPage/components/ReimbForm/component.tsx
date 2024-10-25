@@ -118,16 +118,21 @@ const ReimbForm = () => {
   const [uploading, set_uploading] = useState<boolean>(false);
 
   const [submit_mutation] = useAuthMutation(SUBMIT_REIMB,{onCompleted: ()=> {
-      console.log("test");
-        //const {needs_refresh} = useContext(ReimbTableContext);
-        //needs_refresh(true); 
-  }});
 
+    needs_refresh(true); 
+      console.log("test");
+    }});
+
+
+
+    const {needs_refresh} = useContext(ReimbTableContext);
 
   async function submit_form({Show, Amount, Description}:FormValues) {
         const vars = {show:Show, amount:Amount, receipts:list_id, description:Description};
         submit_mutation({variables:vars});
-      //setIsModalOpen(false);
+        console.log("updating needs refresh");
+    needs_refresh(true); 
+      setIsModalOpen(false);
   }
 
   return (

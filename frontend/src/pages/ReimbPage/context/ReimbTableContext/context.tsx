@@ -23,7 +23,7 @@ interface Props {
 export const ReimbTableProvider: React.FC<Props> = ({ children }: Props) => {
 
     
-  //const [NeedsRefresh, SetNeedsRefresh] = useState<boolean>(false);
+  const [NeedsRefresh, SetNeedsRefresh] = useState<boolean>(true);
 
 
 
@@ -36,31 +36,39 @@ export const ReimbTableProvider: React.FC<Props> = ({ children }: Props) => {
     variables: { id },
     onError: logoutUser,
     onCompleted: ({myReimbs}) => {
+        console.log("updating reimb columns");
         SetReimbColumns(myReimbs);
     },
   });
 
-    GetReimbs();
+    if(NeedsRefresh){
+        console.log("set needs refresh false");
+        SetNeedsRefresh(false);
+        GetReimbs();
+    }
 
-    /*
+
   useEffect(() => {
     const fetchReimbs = async () => {
-        if(NeedsRefresh){
-          await GetReimbs();
-        }
+      await GetReimbs();
     };
     fetchReimbs().catch(console.error);
-  }, [NeedsRefresh]);
-  */
+  }, [NeedsRefresh, GetReimbs]);
 
-
+/*
+    useEffect(() => {
+        
+        console.log(NeedsRefresh);
+        GetReimbs();
+    },[NeedsRefresh]);
+    */
 
 
   const [reimb_columns, SetReimbColumns] = useState<Reimbursement[]>([]);
 
   const context:ReimbTableContext_T = {
     reimbs:reimb_columns,
-    needs_refresh:null,
+    needs_refresh:SetNeedsRefresh,
   }
 
 

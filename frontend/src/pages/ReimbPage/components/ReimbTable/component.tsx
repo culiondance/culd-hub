@@ -35,6 +35,8 @@ const ReimbTable = () => {
       );
   }
 
+  console.log("rerender");
+
 
   const columns = [
     {
