@@ -1,8 +1,8 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useEffect} from "react";
 import { AuthContext } from "../../../../context/AuthContext";
 import { UserContext } from "../../../../context/UserContext";
 import { Reimbursement, User } from "../../../../types/types";
-import { useAuthQuery } from "../../../../services/graphql";
+import { useAuthQuery, useAuthLazyQuery} from "../../../../services/graphql";
 import { ReimbTableContext, ReimbTableContext_T } from "./types";
 import ReimbTable from "../../components/ReimbTable";
 
@@ -17,22 +17,55 @@ interface Props {
   children: React.ReactNode[];
 }
 
+
+
+
 export const ReimbTableProvider: React.FC<Props> = ({ children }: Props) => {
+
+    
+  //const [NeedsRefresh, SetNeedsRefresh] = useState<boolean>(false);
+
+
+
   const { logoutUser } = useContext(AuthContext);
   const { user }: { user: User } = useContext(UserContext);
   const id = user.id;
 
-  useAuthQuery(GET_REIMBS_QUERY, {
+
+  const [GetReimbs] = useAuthLazyQuery(GET_REIMBS_QUERY, {
     variables: { id },
     onError: logoutUser,
-    onCompleted: ({myReimbs}) => (SetReimbColumns(myReimbs)),
+    onCompleted: ({myReimbs}) => {
+        SetReimbColumns(myReimbs);
+    },
   });
+
+    GetReimbs();
+
+    /*
+  useEffect(() => {
+    const fetchReimbs = async () => {
+        if(NeedsRefresh){
+          await GetReimbs();
+        }
+    };
+    fetchReimbs().catch(console.error);
+  }, [NeedsRefresh]);
+  */
+
+
+
 
   const [reimb_columns, SetReimbColumns] = useState<Reimbursement[]>([]);
 
+  const context:ReimbTableContext_T = {
+    reimbs:reimb_columns,
+    needs_refresh:null,
+  }
+
 
     return (
-      <ReimbTableContext.Provider value={reimb_columns}>
+      <ReimbTableContext.Provider value={context}>
         {children}
       </ReimbTableContext.Provider>
     );
@@ -51,7 +84,7 @@ const GET_REIMBS_QUERY = gql`
       date
       completed
       id
-      receipts{
+      receiptList{
           receipts{
               image
           }

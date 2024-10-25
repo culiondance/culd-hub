@@ -64,7 +64,7 @@ class ShowType(DjangoObjectType):
 class ReimbursementType(DjangoObjectType):
     class Meta:
         model = Reimbursement
-        fields = ("id", "member", "show", "amount", "date", "completed", "receipts", "description")
+        fields = ("id", "member", "show", "amount", "date", "completed", "receipt_list", "description")
 
 class ReceiptListType(DjangoObjectType):
     class Meta:

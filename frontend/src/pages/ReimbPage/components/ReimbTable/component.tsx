@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Modal, Table, Tooltip, Image } from "antd";
 import {
   CheckSquareFilled,
@@ -10,21 +10,22 @@ import dayjs from "dayjs";
 import ShowDetails from "../../../ShowsPage/components/ShowDetails";
 import { Show, User, Reimbursement } from "../../../../types/types";
 
-import { ReimbTableContext } from "../../context/ReimbTableContext/types";
+import { ReimbTableContext, ReimbTableContext_T} from "../../context/ReimbTableContext/types";
 
 const ReimbTable = () => {
-  const reimbs:Reimbursement[] = useContext(ReimbTableContext);
-  console.log(reimbs);
 
-  function render_receipts(receipts: {receipt:string}[]){
-      console.log(receipts);
-      const new_receipts = receipts.map((receipt,index) => {
+
+
+  const {reimbs}:ReimbTableContext_T = useContext(ReimbTableContext);
+
+  function render_receipts(receipts: {receipts:{image:string}[]}){
+
+
+      const new_receipts = receipts.receipts.map((receipt,index) => {
           const hostname = window.location.hostname.toString();
-          const protocol = window.location.protocol.toString();
-          const url = "https://receipts." + hostname + ":9000/" + receipt.receipt;
+          const url = "https://receipts." + hostname + ":9000/" + receipt.image;
           //const url_1 = "receipts." + window.location.origin.toString() + "/" +  receipt.receipt;
           //const url = "https://localhost:9000/" + receipt.receipt;
-          console.log(`url ${url}`);
           return <Image src={url} key = {index} height = {75} width = {75} preview = {{maxScale: 100}}></Image>
       });
       return(
@@ -107,10 +108,12 @@ const ReimbTable = () => {
     },
     {
       title: "receipts",
-      key: "receipts",
-      dataIndex: "receipts",
-      render: (receipts:{receipt:string}[]) => {
-        return render_receipts(receipts);
+      key: "receiptList",
+      dataIndex: "receiptList",
+      render: (receipt_list:{receipts:{image:string}[]}) => {
+          if(receipt_list){
+            return render_receipts(receipt_list);
+          }
       },
     },
       ];

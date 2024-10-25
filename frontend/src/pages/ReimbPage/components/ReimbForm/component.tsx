@@ -3,12 +3,15 @@ import { InboxOutlined, UploadOutlined } from "@ant-design/icons";
 import { useAuthMutation, useAuthQuery } from "../../../../services/graphql";
 import FileUploadBox from "../FileUploadBox";
 import { Show } from "../../../../types/types";
-import React, { useContext, useState } from "react";
-import { gql, useMutation} from "@apollo/client";
+import React, { useContext, useState, useEffect} from "react";
+import { gql, useMutation } from "@apollo/client";
 import { Dayjs } from "dayjs";
 
+
+import { ReimbTableContext, ReimbTableContext_T} from "../../context/ReimbTableContext/types";
+
 const SUBMIT_REIMB = gql`
-    mutation SubmitReimb($amount: Float!, $show:ID!, $receipts:[Upload!]!, $description:String){
+    mutation SubmitReimb($amount: Float!, $show:ID!, $receipts:ID, $description:String){
         submitReimb(show:$show,amount:$amount, receipts:$receipts, description:$description){
             reimb{
                 id
@@ -46,6 +49,8 @@ const SubmitButton = ({form, uploading}:{form:FormInstance, uploading: boolean})
            )
       .catch(() => setSubmittable(false));
   }, [form, values]);
+
+
 
   return (
     <Button type="primary" htmlType="submit" disabled={!submittable}> Submit </Button>
@@ -108,18 +113,21 @@ const ReimbForm = () => {
   };
 
 
-  const [receipt_list, set_receipt_list] = useState<number>(null);
+  const [list_id, set_list_id] = useState<number>(null);
 
   const [uploading, set_uploading] = useState<boolean>(false);
 
-  const [submit_mutation] = useAuthMutation(SUBMIT_REIMB,{onCompleted: ()=> {console.log("mutation completed")}});
+  const [submit_mutation] = useAuthMutation(SUBMIT_REIMB,{onCompleted: ()=> {
+      console.log("test");
+        //const {needs_refresh} = useContext(ReimbTableContext);
+        //needs_refresh(true); 
+  }});
 
 
   async function submit_form({Show, Amount, Description}:FormValues) {
-        const vars = {show:Show, amount:Amount, receipts:receipt_list, description:Description};
-        console.log("mutating with vars",vars);
+        const vars = {show:Show, amount:Amount, receipts:list_id, description:Description};
         submit_mutation({variables:vars});
-      setIsModalOpen(false);
+      //setIsModalOpen(false);
   }
 
   return (
@@ -155,7 +163,7 @@ const ReimbForm = () => {
         valuePropName="fileList"
         getValueFromEvent={normFile}
       >
-        <FileUploadBox Collection = {[receipt_list, set_receipt_list]} setUploading = {set_uploading}></FileUploadBox>
+        <FileUploadBox Collection = {[list_id, set_list_id]} setUploading = {set_uploading}></FileUploadBox>
       </Form.Item>
           <Form.Item >
             <SubmitButton form={form} uploading={uploading}/>

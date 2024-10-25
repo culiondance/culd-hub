@@ -90,26 +90,23 @@ class SubmitReimb(graphene.Mutation):
         
         member=Member.objects.get(pk=info.context.user.member.id)
         show_object=Show.objects.get(pk=show)
-       
+        receipt_list=ReceiptList.objects.get(pk=receipts) 
         reimb_instance = Reimbursement(
             show = show_object,
             amount = amount,
             member = member,
             description = description,
         )
+
         reimb_instance.save()
 
-        for r in receipts:
-            file = r.open()
-            receipt = Receipt(receipt = file, reimb= reimb_instance)
-            receipt.save()
 
-
+        receipt_list.reimb = reimb_instance
+        receipt_list.save()
         return SubmitReimb(reimb = reimb_instance)
 
 
 class UploadReceipts(graphene.Mutation):
-    id = graphene.ID()
     receipt_list = graphene.Field(ReceiptListType)
 
     class Arguments:
@@ -119,21 +116,20 @@ class UploadReceipts(graphene.Mutation):
     @staticmethod
     def mutate(self, info, **kwargs):
 
-        ids = [] 
-        if "collection" in kwargs:
-            receipt_list = ReceiptList.objects.get(pk=kwargs["collection"])
-            ids = [receipt.id for receipt in receipt_list]
+        receipt_list = ReceiptList(reimb=None) if "collection" not in kwargs else ReceiptList.objects.get(pk=kwargs["collection"])
+        receipt_list.save()
 
         receipts = kwargs["receipts"]
-        print(receipts)
+        #print(receipts)
 
 
         for r in receipts:
             file = r.open()
-            receipt = Receipt(image = file)
+            receipt = Receipt(image = file, collection=receipt_list)
             receipt.save()
-            ids.append(receipt.id)
-        return UploadReceipts(id = ids)
+            receipt_list.receipts.add(receipt)
+
+        return UploadReceipts(receipt_list = receipt_list)
 
 
 class DeleteReceipt(graphene.Mutation):

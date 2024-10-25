@@ -1,6 +1,6 @@
 import {gql} from '@apollo/client';
 import { useAuthMutation} from "../../../../services/graphql";
-import React, { Dispatch } from "react";
+import React, { Dispatch, useState} from "react";
 
 import { InboxOutlined } from "@ant-design/icons";
 
@@ -11,9 +11,11 @@ import { Upload } from 'antd';
 const UPLOAD_RECEIPTS = gql`
     mutation UploadReceipts($receipts: [Upload!]!){
         uploadReceipts(receipts:$receipts){
-            id
             receiptList{
                 id
+                receipts{
+                    id
+                }
             }
         }
     }
@@ -22,9 +24,11 @@ const UPLOAD_RECEIPTS = gql`
 const UPDATE_RECEIPTS = gql`
     mutation UploadReceipts($receipts: [Upload!]!, $collection:ID){
         uploadReceipts(receipts:$receipts,collection:$collection){
-            id
             receiptList{
                 id
+                receipts{
+                    id
+                }
             }
         }
     }
@@ -32,68 +36,83 @@ const UPDATE_RECEIPTS = gql`
 
 
 
+interface upload_response{
+    uploadReceipts:{
+        receiptList:{
+            id:number
+            receipts:ReceiptList
+        }
+    }
+}
+
+interface update_response{
+    uploadReceipts:{
+        receiptList:{
+            id:number
+            ReceiptList:ReceiptList
+        }
+    }
+}
+
+interface ReceiptList{
+    id:number
+    receipts:{id:number}[]
+}
+
 interface FileProps{
     Collection:[number,Dispatch<number>],
     setUploading: Dispatch<boolean>
 }
 
-const FileUploadBox = ({Collection:[collection, setCollection], setUploading}:FileProps) => {
-
+const FileUploadBox = ({Collection:[list_id, set_list_id], setUploading}:FileProps) => {
+    
+    //const [collection, setCollection] = useState<number>([]);
 
     const [upload_mutation] = useAuthMutation(UPLOAD_RECEIPTS,
-        {onCompleted: ({id})=> {
-            console.log("mutation completed");
-            setCollection(id);
+        {onCompleted: ({uploadReceipts}:upload_response)=> {
+            const id = uploadReceipts.receiptList.id;
+            set_list_id(id);
             setUploading(false);
         }});
 
     const [update_mutation] = useAuthMutation(UPDATE_RECEIPTS,
-        {onCompleted: ({id})=> {
-            console.log("mutation completed");
-            setCollection(id);
+        {onCompleted: ({uploadReceipts}:update_response)=> {
+            set_list_id(uploadReceipts.receiptList.id);
             setUploading(false);
         }});
 
-        const updateUploads = (wrapped_files) => {
-            const files:FileList = wrapped_files.map((obj) => (obj.originFileObj));
-            setUploading(true);
-            if(collection == null){
-                console.log("uploading")
-                const vars = {variables: {receipts: files}};
-                upload_mutation(vars);
-            }else{
-                console.log("updating")
-                const vars = {variables: {receipts: files}, collection: collection};
-                update_mutation(vars);
+    const updateUploads = (wrapped_files) => {
+        const files:FileList = wrapped_files.map((obj) => (obj.originFileObj));
+        setUploading(true);
+        if(list_id == null){
+            const vars = {variables: {receipts: files}};
+            upload_mutation(vars);
+        }else{
+            // TODO: instead should make it figure out what to upload
+            const vars = {variables: {receipts: files}, collection: list_id};
+            update_mutation(vars);
 
-            }
-        };
+        }
+    };
 
         
-        const props = {
-            name: 'file',
-            multiple: true,
-            onChange({fileList}){
-                updateUploads(fileList)
-            },
-            //action: window.location.hostname.toString(),
-        }
+    const props = {
+        name: 'file',
+        multiple: true,
+        onChange({fileList}){
+            updateUploads(fileList)
+        },
+        //action: window.location.hostname.toString(),
+    }
 
-        return(
-        <Upload.Dragger {...props}>
-            <p className="ant-upload-drag-icon">
-                <InboxOutlined/>
-            </p>
-            <p className="ant-upload-text">Click or drag file to this area to upload</p>
-        </Upload.Dragger>
-        )
+    return(
+    <Upload.Dragger {...props}>
+        <p className="ant-upload-drag-icon">
+            <InboxOutlined/>
+        </p>
+        <p className="ant-upload-text">Click or drag file to this area to upload</p>
+    </Upload.Dragger>
+    )
 };
-
-/*
- *        <input type="file" multiple onChange = {updateUploads}>
-        </input>);
-
- */
-
 
 export default FileUploadBox;

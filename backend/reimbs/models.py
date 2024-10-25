@@ -53,14 +53,14 @@ class Reimbursement(models.Model):
         return response
 
     def get_receipts(self):
-        receipt_list = self.receipts.values("receipts")
+        receipt_list = self.receipts.values("receipt_list")
         return receipt_list
 
     reimb_receipts.short_description = 'Image'
     reimb_receipts.allow_tags = True
 
 class ReceiptList(models.Model):
-    reimb = models.ForeignKey(Reimbursement, on_delete=models.CASCADE, related_name="receipts", null=False)
+    reimb = models.OneToOneField(Reimbursement, on_delete=models.CASCADE, related_name="receipt_list", null=True)
 
 
 class Receipt(models.Model):
