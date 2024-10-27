@@ -103,6 +103,7 @@ class SubmitReimb(graphene.Mutation):
 
         receipt_list.reimb = reimb_instance
         receipt_list.save()
+        print("finished submit reimb")
         return SubmitReimb(reimb = reimb_instance)
 
 

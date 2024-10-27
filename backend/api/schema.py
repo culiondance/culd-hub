@@ -89,6 +89,7 @@ class Query(graphene.ObjectType):
 
     @staticmethod
     def resolve_my_reimbs(root, info, **kwargs):
+        print("got resolve my reimbs")
         me = User.objects.get(pk=info.context.user.pk).member
         if me is None:
             return None

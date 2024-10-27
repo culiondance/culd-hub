@@ -37,7 +37,7 @@ export const ReimbTableProvider: React.FC<Props> = ({ children }: Props) => {
     onError: logoutUser,
     onCompleted: ({myReimbs}) => {
         SetReimbColumns(myReimbs);
-        console.log("updated reimb columns to length",myReimbs.length);
+        SetNeedsRefresh(false); 
     },
     fetchPolicy: "network-only",
     nextFetchPolicy: "network-only",

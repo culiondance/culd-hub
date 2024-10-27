@@ -119,13 +119,8 @@ const ReimbForm = () => {
 
   const [uploading, set_uploading] = useState<boolean>(false);
 
-  const [submit_mutation] = useAuthMutation(SUBMIT_REIMB,{onCompleted: ()=> {
-    
-        console.log("submitted reimbursement, about to update needs refresh");
+  const [submit_mutation] = useAuthMutation(SUBMIT_REIMB,{onCompleted: (new_reimb)=> {
         needs_refresh(true); 
-
-        console.log("updated needs refresh");
-        //print("")
     }});
 
 
