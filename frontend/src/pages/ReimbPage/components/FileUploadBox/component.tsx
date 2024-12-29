@@ -1,11 +1,11 @@
 import {gql} from '@apollo/client';
 import { useAuthMutation} from "../../../../services/graphql";
 import React, { Dispatch, useState} from "react";
-
+import type { RcFile, UploadFile, UploadProps } from 'antd/es/upload/interface';
 import { InboxOutlined } from "@ant-design/icons";
 
 
-import { Upload } from 'antd';
+import { Upload, message } from 'antd';
 
 
 const UPLOAD_RECEIPTS = gql`
@@ -101,9 +101,11 @@ const FileUploadBox = ({Collection:[list_id, set_list_id], setUploading}:FilePro
         onChange({fileList}){
             updateUploads(fileList)
         },
-        beforeUpload: () => (false),
+        beforeUpload: (_file:RcFile, files: RcFile[]) => {
+            return(false);
+        }
         //action: window.location.hostname.toString(),
-    }
+    };
 
     return(
     <Upload.Dragger {...props}>

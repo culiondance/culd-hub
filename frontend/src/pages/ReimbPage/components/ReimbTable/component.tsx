@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { Modal, Table, Tooltip, Image } from "antd";
 import {
-  CheckSquareFilled,
+  CheckOutlined,
   ClockCircleOutlined,
   InfoCircleOutlined,
 } from "@ant-design/icons";
@@ -13,8 +13,6 @@ import { Show, User, Reimbursement } from "../../../../types/types";
 import { ReimbTableContext, ReimbTableContext_T} from "../../context/ReimbTableContext/types";
 
 const ReimbTable = () => {
-
-
 
   const {reimbs}:ReimbTableContext_T = useContext(ReimbTableContext);
 
@@ -31,19 +29,13 @@ const ReimbTable = () => {
       );
   }
 
-  function EditMe(){
-      console.log("edit");
-  }
-
-
-
   const columns = [
     {
       title: "Completed",
       key: "completed",
       dataIndex: "completed",
       render: (completed: boolean) => {
-        return completed ? <CheckSquareFilled /> : <ClockCircleOutlined />;
+        return completed ? <CheckOutlined /> : <ClockCircleOutlined />;
       },
     },
     {
@@ -103,8 +95,8 @@ const ReimbTable = () => {
       title: "Description",
       key: "description",
       dataIndex: "description",
-      render: (receipts) => 
-      (<p>{receipts}</p>)
+      render: (description) => 
+      (<p>{description}</p>)
       ,
     },
     {
@@ -117,15 +109,9 @@ const ReimbTable = () => {
           }
       },
     },
+  ];
 
-      ];
-
-
-
-
-  return (
-
-      <Table rowKey={reimb => Number(reimb.id)} dataSource={reimbs} columns={columns} />);
+  return (<Table rowKey={reimb => Number(reimb.id)} dataSource={reimbs} columns={columns} />);
 };
 
 export default ReimbTable;

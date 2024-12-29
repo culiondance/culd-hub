@@ -13,8 +13,6 @@ def get_upload_name(instance, filename):
     unixtime = time.time()
     return "user_{0}/{1}-{2}{3}".format(id,filename,unixtime, extension)
 
-
-
 class Reimbursement(models.Model):
 
     member = models.ForeignKey("shows.Member", on_delete=models.CASCADE, related_name="reimbs", null = True)
@@ -31,7 +29,6 @@ class Reimbursement(models.Model):
 
     completed = models.BooleanField(default=False, verbose_name="completed")
     
-
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
         if settings.ENABLE_SLACK_INTEGRATION:
@@ -44,7 +41,7 @@ class Reimbursement(models.Model):
             super().save()
     
     def delete_receipts(self):
-        print(self.receipts)
+        self.receipt_list.receipts.all().delete()
 
     def reimb_receipts(self):
         from django.utils.html import mark_safe
@@ -63,9 +60,7 @@ class Reimbursement(models.Model):
 class ReceiptList(models.Model):
     reimb = models.OneToOneField(Reimbursement, on_delete=models.CASCADE, related_name="receipt_list", null=True)
 
-
 class Receipt(models.Model):
     image = models.ImageField(upload_to=get_upload_name)
     collection = models.ForeignKey(ReceiptList, on_delete=models.CASCADE, related_name="receipts", null = True)
-
 
