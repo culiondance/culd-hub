@@ -258,7 +258,12 @@ class Show(models.Model):
 
     @admin.display(description="Date", ordering="date")
     def formatted_date(self):
-        return self.date.strftime("%a, %m/%d")
+        return self.date.strftime("%a, %m/%d") if self.date else None
+
+    @admin.display(description="Day Of The Week", ordering="day-of-week")
+    def day_of_week(self):
+        return self.date.strftime("%a").upper() if self.date else None
+
 
     @admin.display(description="Time", ordering="time")
     def formatted_time(self, fmt="%-I:%M %p"):

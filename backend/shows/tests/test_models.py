@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db.utils import IntegrityError
 from django.test import TestCase
+from django.conf import settings
 from faker import Faker
 
 from shows.models import Member, Show, Round, Role, Contact
@@ -97,7 +98,8 @@ class TestShowModel(PatchSlackBossMixin, TestCase):
         show_date = self.show_data["date"]
         self.assertEqual(str(self.show), self.show_data["name"])
         self.assertEqual(self.show.day_of_week(), show_date.strftime("%a").upper())
-        self.assertEqual(self.show.formatted_date(), show_date.strftime("%m/%d"))
+
+        self.assertEqual(self.show.formatted_date(), show_date.strftime("%a, %m/%d"))
         self.assertEqual(self.show.performer_count(), len(self.members))
         self.assertEqual(
             self.show.time, min([show_round["time"] for show_round in self.round_data])
@@ -146,10 +148,11 @@ class TestShowModel(PatchSlackBossMixin, TestCase):
         self.assertTrue(name.islower() and name.replace("-", "").isalnum())
 
     def test_has_slack_channel(self):
-        self.assertFalse(self.show.has_slack_channel())
-        SlackChannel(id=self.channel_id, show=self.show)
-        self.assertTrue(self.show.has_slack_channel())
-        self.assertEqual(self.show.channel.id, self.channel_id)
+        if settings.ENABLE_SLACK_INTEGRATION:
+            self.assertFalse(self.show.has_slack_channel())
+            SlackChannel(id=self.channel_id, show=self.show)
+            self.assertTrue(self.show.has_slack_channel())
+            self.assertEqual(self.show.channel.id, self.channel_id)
 
     def test_is_open(self):
         self.show.status = self.show.STATUSES.draft
