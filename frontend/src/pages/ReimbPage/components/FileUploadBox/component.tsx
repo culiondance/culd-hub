@@ -91,7 +91,6 @@ const FileUploadBox = ({Collection:[list_id, set_list_id], setUploading}:FilePro
             // TODO: instead should make it figure out what to upload
             const vars = {variables: {receipts: files}, collection: list_id};
             update_mutation(vars);
-
         }
     };
 
@@ -102,6 +101,7 @@ const FileUploadBox = ({Collection:[list_id, set_list_id], setUploading}:FilePro
         onChange({fileList}){
             updateUploads(fileList)
         },
+        beforeUpload: () => (false),
         //action: window.location.hostname.toString(),
     }
 

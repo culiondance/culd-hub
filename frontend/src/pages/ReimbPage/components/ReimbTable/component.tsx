@@ -19,13 +19,9 @@ const ReimbTable = () => {
   const {reimbs}:ReimbTableContext_T = useContext(ReimbTableContext);
 
   function render_receipts(receipts: {receipts:{image:string}[]}){
-
-
       const new_receipts = receipts.receipts.map((receipt,index) => {
           const hostname = window.location.hostname.toString();
-          const url = "https://receipts." + hostname + ":9000/" + receipt.image;
-          //const url_1 = "receipts." + window.location.origin.toString() + "/" +  receipt.receipt;
-          //const url = "https://localhost:9000/" + receipt.receipt;
+          const url = "http://" + hostname + ":8000/receipts/" + receipt.image;
           return <Image src={url} key = {index} height = {75} width = {75} preview = {{maxScale: 100}}></Image>
       });
       return(
@@ -35,11 +31,15 @@ const ReimbTable = () => {
       );
   }
 
+  function EditMe(){
+      console.log("edit");
+  }
+
 
 
   const columns = [
     {
-      title: "completed",
+      title: "Completed",
       key: "completed",
       dataIndex: "completed",
       render: (completed: boolean) => {
@@ -47,7 +47,7 @@ const ReimbTable = () => {
       },
     },
     {
-      title: "date",
+      title: "Date",
       key: "date",
       dataIndex: "date",
       render: (date: dayjs.Dayjs) => {
@@ -59,7 +59,7 @@ const ReimbTable = () => {
       },
     },
     {
-      title: "show",
+      title: "Show",
       key: "show",
       dataIndex: "show",
       render: ({ name: showname, date: showdate }) => {
@@ -78,7 +78,7 @@ const ReimbTable = () => {
       },
     },
     {
-      title: "amount",
+      title: "Amount",
       key: "amount",
       dataIndex: "amount",
       render: (amount: number) => {
@@ -100,7 +100,7 @@ const ReimbTable = () => {
       },
     },
     {
-      title: "description",
+      title: "Description",
       key: "description",
       dataIndex: "description",
       render: (receipts) => 
@@ -108,7 +108,7 @@ const ReimbTable = () => {
       ,
     },
     {
-      title: "receipts",
+      title: "Receipts",
       key: "receiptList",
       dataIndex: "receiptList",
       render: (receipt_list:{receipts:{image:string}[]}) => {
@@ -117,9 +117,15 @@ const ReimbTable = () => {
           }
       },
     },
+
       ];
 
-  return <Table rowKey={reimb => Number(reimb.id)} dataSource={reimbs} columns={columns} />;
+
+
+
+  return (
+
+      <Table rowKey={reimb => Number(reimb.id)} dataSource={reimbs} columns={columns} />);
 };
 
 export default ReimbTable;

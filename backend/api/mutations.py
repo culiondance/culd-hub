@@ -78,6 +78,7 @@ class DeleteReimb(graphene.Mutation):
 
 class SubmitReimb(graphene.Mutation):
     reimb = graphene.Field(ReimbursementType)
+    urls = graphene.List(graphene.String)
 
     class Arguments:
         receipts = graphene.ID(required=False)
@@ -103,8 +104,10 @@ class SubmitReimb(graphene.Mutation):
 
         receipt_list.reimb = reimb_instance
         receipt_list.save()
-        print("finished submit reimb")
-        return SubmitReimb(reimb = reimb_instance)
+
+        urls = [receipt.image for receipt in receipt_list.receipts.all()]
+        print("finished submit reimb with urls " + str(urls))
+        return SubmitReimb(reimb = reimb_instance, urls = urls)
 
 
 class UploadReceipts(graphene.Mutation):

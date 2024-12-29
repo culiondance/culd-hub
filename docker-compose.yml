@@ -3,6 +3,7 @@ services:
     build: ./backend
     volumes:
       - ./backend:/app/backend
+
       - user_media:/app/backend/media
     ports:
       - "8000:8000"
@@ -44,6 +45,7 @@ services:
       - ROOT_URL=localhost
     ports:
       - "9000:443"
+      - "9001:80"
 
 volumes:
   user_media:

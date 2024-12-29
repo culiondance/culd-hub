@@ -47,13 +47,14 @@ class Reimbursement(models.Model):
         print(self.receipts)
 
     def reimb_receipts(self):
+        from django.utils.html import mark_safe
         response = u''
         for receipt in self.get_receipts():
-            response+= u'<img src="%s"/>' %receipt.receipt.path
-        return response
+            response+= u'<img src="/receipts/%s"/height=75 width=75><br>' % mark_safe(str(receipt.image))
+        return mark_safe(response)
 
     def get_receipts(self):
-        receipt_list = self.receipts.values("receipt_list")
+        receipt_list = self.receipt_list.receipts.all()
         return receipt_list
 
     reimb_receipts.short_description = 'Image'
