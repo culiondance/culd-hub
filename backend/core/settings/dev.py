@@ -20,16 +20,6 @@ if os.environ.get("DEVELOPMENT_DATABASE") == "postgres":
         }
     }
 
-STORAGES = {
-        "default":{
-            "BACKEND":"storages.backends.s3.S3Storage",
-            "OPTIONS":{
-                },
-        },
-        "staticfiles":{
-            "BACKEND": "django.contrib.staticfiles.storage.StaticFilesStorage",
-        }
-}
 EMAIL_BACKEND = "django.core.mail.backends.dummy.EmailBackend"
 
 
