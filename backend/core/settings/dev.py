@@ -21,3 +21,7 @@ if os.environ.get("DEVELOPMENT_DATABASE") == "postgres":
             "PORT": 5432,
         }
     }
+
+    # Use console email backend for local development
+    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
