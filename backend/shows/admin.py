@@ -1,7 +1,9 @@
 from django.contrib import admin
+from django.utils.html import format_html
 from django.conf import settings
-from shows.models import Show, Round, Member, Contact, Role
-
+from shows.models import Show, Round, Member, Contact, Role, Reimbursement
+import csv
+from django.http import HttpResponse
 
 class RoundInlineAdmin(admin.TabularInline):
     model = Round
@@ -70,8 +72,74 @@ class MemberAdmin(admin.ModelAdmin):
 class MemberInlineAdmin(admin.TabularInline):
     model = Member
 
+class ReimbursementAdmin(admin.ModelAdmin):
+    list_display = [
+        "show",
+        "user",
+        "amount",
+        "payment_method",
+        "created_at",
+    ]
+
+    list_filter = [
+        "show",
+        "user",
+        "created_at"
+    ]
+    search_fields = ["user__email", "show__name"]
+    readonly_fields = [
+        "user_first_name", 
+        "user_last_name", 
+        "show_date", 
+        "show_name", 
+        "photo_url"]
+    
+    actions = ["download_reimbursements_csv"]
+
+    def download_reimbursements_csv(self, request, queryset):
+        response = HttpResponse(content_type='text/csv')
+        response['Content-Disposition'] = 'attachment; filename="reimbursements.csv"'
+
+        writer = csv.writer(response)
+        writer.writerow(['User Email', 'First Name', 'Last Name', 'Show Name', 'Show Date', 'Amount', 'Payment Method', 'Submitted At', 'Reciept'])
+
+        def download_reimbursements_csv(self, request, queryset):
+            """Generate and download CSV for selected reimbursements"""
+            response = HttpResponse(content_type="text/csv")
+            response["Content-Disposition"] = 'attachment; filename="reimbursements.csv"'
+            
+            writer = csv.writer(response)
+            writer.writerow([
+                "Performance Name",
+                "Performance Date",
+                "First Name",
+                "Last Name",
+                "Payment Method",
+                "Username",
+                "Amount",
+                "Notes",
+                "Receipt",   # changed header
+                "Submitted",
+            ])
+            
+            for r in queryset:
+                writer.writerow([
+                    r.show_name,
+                    r.show_date,
+                    r.user_first_name,
+                    r.user_last_name,
+                    r.get_payment_method_display(),
+                    r.payment_username,
+                    r.amount,
+                    r.notes,
+                    r.photo_url,   
+                    r.created_at.strftime("%Y-%m-%d %H:%M"),
+                ])
+            
+            return response
 
 admin.site.register(Show, ShowAdmin)
 admin.site.register(Member, MemberAdmin)
 admin.site.register(Contact)
 admin.site.register(Role)
+admin.site.register(Reimbursement, ReimbursementAdmin)
