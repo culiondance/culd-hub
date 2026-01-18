@@ -8,6 +8,7 @@ from django.db import models
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.utils.translation import gettext_lazy as _
+from pydantic import ValidationError
 from phonenumber_field.modelfields import PhoneNumberField
 
 from users.managers import UserManager
@@ -21,6 +22,8 @@ class User(AbstractUser):
     first_name = models.CharField(_("first name"), max_length=150)
     last_name = models.CharField(_("last name"), max_length=150)
     phone = PhoneNumberField(_("phone number"), null=True, blank=True)
+    venmo_username = models.CharField(max_length=100, blank=True)
+    zelle_username = models.CharField(max_length=100, blank=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "last_name"]
@@ -95,3 +98,10 @@ class User(AbstractUser):
         template = "email/user_activated_email.html"
         subject = "email/user_activated_subject.txt"
         return self.send(subject, template, email_context, *args, **kwargs)
+
+    def clean(self):
+        super().clean()
+        if not self.venmo_username and not self.zelle_username:
+            raise ValidationError(
+                _("You must provide either a Venmo username or a Zelle username.")
+            )
