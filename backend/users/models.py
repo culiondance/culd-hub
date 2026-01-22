@@ -1,5 +1,5 @@
 import time
-
+import logging
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.contrib.sites.shortcuts import get_current_site
@@ -14,6 +14,7 @@ from users.managers import UserManager
 from users.signals import signals
 from users.tokens import action_token, TokenAction
 
+logger = logging.getLogger(__name__)
 
 class User(AbstractUser):
     username = None
@@ -33,10 +34,19 @@ class User(AbstractUser):
     def save(self, *args, **kwargs):
         old_instance = User.objects.filter(pk=self.pk).first()
         was_active = getattr(old_instance, "is_active", False)
+
         super().save(*args, **kwargs)
+
         if self.is_active and not was_active:
             signals.user_activated.send(sender=User, user=self)
-            self.send_user_activated_email()
+
+            try:
+                self.send_user_activated_email()
+            except Exception:
+                logger.exception(
+                    "Failed to send activation email for user %s",
+                    self.pk,
+                )
 
     def activate(self):
         was_active = self.is_active
