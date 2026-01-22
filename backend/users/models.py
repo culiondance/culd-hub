@@ -22,8 +22,8 @@ class User(AbstractUser):
     first_name = models.CharField(_("first name"), max_length=150)
     last_name = models.CharField(_("last name"), max_length=150)
     phone = PhoneNumberField(_("phone number"), null=True, blank=True)
-    venmo_username = models.CharField(max_length=100, blank=True)
-    zelle_username = models.CharField(max_length=100, blank=True)
+    venmo_username = models.CharField(max_length=100, blank=True, null=True)
+    zelle_username = models.CharField(max_length=100, blank=True, null=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "last_name"]

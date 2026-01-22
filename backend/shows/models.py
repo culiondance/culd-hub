@@ -12,6 +12,19 @@ from slack.models import SlackUser, SlackChannel
 # User = get_user_model()
 from users.models import User
 
+class Reimbursement(models.Model):
+    """Model for a reimbursement request.
+    Each Reimbursement is linked to a Member and contains information about
+    the reason for reimbursement, amount, payment method, and proof of expense.
+    """
+
+    PAYMENT_METHODS = Choices(
+        (0, "venmo", _("Venmo")),
+        (1, "zelle", _("Zelle")),
+    )
+
+    show = models.ForeignKey("Show", on_delete=models.CASCADE, related_name="reimbursements")
+    member = models.ForeignKey("Member", on_delete=models.CASCADE, related_name="reimbursements")
 
 
 class Member(models.Model):
@@ -358,39 +371,3 @@ class Contact(models.Model):
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
-
-class Reimbursement(models.Model):
-    """Model for a reimbursement request.
-    Each Reimbursement is linked to a Member and contains information about
-    the reason for reimbursement, amount, payment method, and proof of expense.
-    """
-
-    PAYMENT_METHODS = Choices(
-        (0, "venmo", _("Venmo")),
-        (1, "zelle", _("Zelle")),
-    )
-
-    show = models.ForeignKey(Show, on_delete=models.CASCADE, related_name="reimbursements")
-    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="reimbursements")
-
-    user_first_name = models.CharField(max_length=150)
-    user_last_name = models.CharField(max_length=150)
-    show_name = models.CharField(max_length = 150)
-    show_date = models.DateField()
-    
-    #image download url for reciept
-    photo_url = models.URLField()
-    #other fields for the form submission
-    notes = models.TextField(blank=True)
-    payment_method = models.PositiveSmallIntegerField(choices=PAYMENT_METHODS)
-    payment_username = models.CharField(max_length=100)
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    class Meta:
-        ordering = ["-created_at"]
-    def __str__(self):
-        return f"Reimbursement for {self.user.get_full_name()} - {self.show.name}"
-
-    
