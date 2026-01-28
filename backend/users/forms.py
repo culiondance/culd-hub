@@ -29,7 +29,7 @@ class RegisterForm(UserCreationForm):
 class UpdateUserForm(UserChangeForm):
     class Meta:
         model = get_user_model()
-        fields = ["email", "password", "first_name", "last_name", "phone"]
+        fields = ["email", "password", "first_name", "last_name", "phone", "venmo_username", "zelle_username"]
         field_classes = {"username": CustomUsernameField}
 
     def __init__(self, *args, **kwargs):
