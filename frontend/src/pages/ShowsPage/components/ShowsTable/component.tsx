@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { Button, Modal, Progress, Space, Table, Tag, Tooltip } from "antd";
 import {
   CarFilled,
@@ -17,12 +17,21 @@ import { ShowContextInterface } from "../../context/ShowsTableContext/types";
 import ShowDetails from "../ShowDetails";
 import { Views } from "../ShowsTableControls";
 import { title } from "process";
+import { ReimbursementModal } from "../ReimbursementModal/component";
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const customParseFormat = require("dayjs/plugin/customParseFormat");
 dayjs.extend(customParseFormat);
 
 const ShowsTable = ({ user }: { user: User }) => {
+  const [reimbursementModalVisible, setReimbursementModalVisible] =
+    useState(false);
+  const [selectedShow, setSelectedShow] = useState<Show | null>(null);
+
+  const openReimbursementModal = (show: Show) => {
+    setSelectedShow(show);
+    setReimbursementModalVisible(true);
+  };
   const {
     shows,
     showPriorityChoices,
@@ -317,12 +326,22 @@ const ShowsTable = ({ user }: { user: User }) => {
       ),
       width: "5%",
       render: (performers: Member[], show: Show) => (
-        <Button
-          type="text"
-          icon={<DollarOutlined />}
-          //onClick={() =>
-          title="Submit Reimbursement"
-        />
+        <div>
+          <Button
+            type="text"
+            icon={<DollarOutlined />}
+            onClick={() => openReimbursementModal(show)}
+            title="Submit Reimbursement"
+          />
+          {selectedShow && (
+            <ReimbursementModal
+              show={selectedShow}
+              visible={reimbursementModalVisible}
+              onClose={() => setReimbursementModalVisible(false)}
+              user={user}
+            />
+          )}
+        </div>
       ),
     },
   ];

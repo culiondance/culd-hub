@@ -1,6 +1,6 @@
 import graphene
 
-from shows.models import Show, Member, Role
+from shows.models import Show, Member, Role, Reimbursement
 from users.mixins import (
     SendPasswordResetEmailMixin,
     LogoutUserMixin,
@@ -10,7 +10,7 @@ from users.mixins import (
     UpdatePasswordMixin,
 )
 from .bases import DynamicArgsMixin
-from .types import RoleType
+from .types import RoleType, ReimbursementType
 
 
 class CreateRoleMutation(graphene.Mutation):
@@ -75,3 +75,51 @@ class SendPasswordResetEmailMutation(
 class ResetPasswordMutation(DynamicArgsMixin, ResetPasswordMixin, graphene.Mutation):
     __doc__ = ResetPasswordMixin.__doc__
     _required_args = {"user_id": "ID", "token": "String", "password": "String"}
+
+
+class SubmitReimbursementMutation(graphene.Mutation):
+    """Submit a reimbursement request for a performance"""
+    reimbursement = graphene.Field(ReimbursementType)
+    success = graphene.Boolean()
+   
+    
+    class Arguments:
+        show_id = graphene.ID(required=True)
+        photo_url = graphene.String(required=True)  # URL of uploaded photo
+        notes = graphene.String()
+        payment_method = graphene.String(required=True)  # "venmo" or "zelle"
+        amount = graphene.Decimal(required=True)
+    
+    @classmethod
+    def mutate(cls, root, info, show_id, photo_url, notes, payment_method, amount):
+        user = info.context.user
+        show = Show.objects.get(pk=show_id)
+        
+        # Fetch payment username based on method
+        if payment_method == "venmo":
+            payment_username = user.venmo_username
+        elif payment_method == "zelle":
+            payment_username = user.zelle_username
+        else:
+            return cls(
+                success=False,
+                errors={"payment_method": "Invalid payment method"}
+            )
+        
+        # Create reimbursement record with denormalized fields
+        reimbursement = Reimbursement(
+            show=show,
+            user=user,
+            user_first_name=user.first_name,
+            user_last_name=user.last_name,
+            show_date=show.date,
+            show_name=show.name,
+            photo_url=photo_url,
+            notes=notes,
+            payment_method=payment_method,
+            payment_username=payment_username,
+            amount=amount,
+        )
+        reimbursement.save()
+        
+        return cls(success=True, reimbursement=reimbursement)

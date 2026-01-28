@@ -4,7 +4,7 @@ from graphene_django import DjangoObjectType
 from graphene_django.utils import camelize
 
 from common.exceptions import WrongUsage
-from shows.models import Member, Show, Round, Contact, Role
+from shows.models import Member, Show, Round, Contact, Role, Reimbursement
 from users.models import User
 
 
@@ -89,3 +89,19 @@ class ExpectedErrorType(Scalar):
         elif isinstance(errors, list):
             return {"nonFieldErrors": errors}
         raise WrongUsage("`errors` must be list or dict!")
+
+
+class ReimbursementType(DjangoObjectType):
+    class Meta:
+        model = Reimbursement
+        fields = (
+            "id",
+            "show",
+            "user",
+            "photo_url",
+            "notes",
+            "payment_method",
+            "payment_username",
+            "amount",
+            "created_at",
+        )

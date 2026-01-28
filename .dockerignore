@@ -1,9 +1,40 @@
-# JS stuff
-node_modules
+# Git
 
-# Dev stuff
 .git
 .gitignore
-LICENSE
-README.md
-.vscode
+
+# Python
+
+**pycache**/
+_.pyc
+_.pyo
+_.pyd
+_.log
+venv/
+.env
+
+# Node / Frontend
+
+node_modules/
+frontend/node_modules/
+frontend/build/
+frontend/dist/
+\*.lock
+
+# OS / IDE
+
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+\*.swp
+
+# Static/media files (if handled separately or via volumes)
+
+media/
+staticfiles/
+
+# Docker / temporary files
+
+_.tar
+_.tmp
