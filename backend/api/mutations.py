@@ -81,7 +81,6 @@ class SubmitReimbursementMutation(graphene.Mutation):
     """Submit a reimbursement request for a performance"""
     reimbursement = graphene.Field(ReimbursementType)
     success = graphene.Boolean()
-    errors = graphene.List(ErrorType)  # <- this replaces the dict
 
     class Arguments:
         show_id = graphene.ID(required=True)
