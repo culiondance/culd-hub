@@ -81,45 +81,55 @@ class SubmitReimbursementMutation(graphene.Mutation):
     """Submit a reimbursement request for a performance"""
     reimbursement = graphene.Field(ReimbursementType)
     success = graphene.Boolean()
-   
-    
+    errors = graphene.List(ErrorType)  # <- this replaces the dict
+
     class Arguments:
         show_id = graphene.ID(required=True)
-        photo_url = graphene.String(required=True)  # URL of uploaded photo
+        receipt_url = graphene.String(required=True)
         notes = graphene.String()
-        payment_method = graphene.String(required=True)  # "venmo" or "zelle"
+        payment_method = graphene.String(required=True)
         amount = graphene.Decimal(required=True)
-    
+
+    class ErrorType(graphene.ObjectType):
+        field = graphene.String()
+        message = graphene.String()
+
     @classmethod
-    def mutate(cls, root, info, show_id, photo_url, notes, payment_method, amount):
+    
+    def mutate(cls, root, info, show_id, receipt_url, notes, payment_method, amount):
         user = info.context.user
         show = Show.objects.get(pk=show_id)
-        
-        # Fetch payment username based on method
+
+        errors_list = []
+
+        # one reimbursement per user per show
+        if Reimbursement.objects.filter(show=show, user=user).exists():
+            errors_list.append(ErrorType(field="nonFieldErrors", message="You have already submitted for this performance."))
+
+        # Fetch payment username
         if payment_method == "venmo":
             payment_username = user.venmo_username
         elif payment_method == "zelle":
             payment_username = user.zelle_username
         else:
-            return cls(
-                success=False,
-                errors={"payment_method": "Invalid payment method"}
-            )
-        
-        # Create reimbursement record with denormalized fields
-        reimbursement = Reimbursement(
+            errors_list.append(ErrorType(field="payment_method", message="Invalid payment method"))
+
+        if errors_list:
+            return cls(success=False, errors=errors_list)
+
+        # Create reimbursement record
+        reimbursement = Reimbursement.objects.create(
             show=show,
             user=user,
             user_first_name=user.first_name,
             user_last_name=user.last_name,
             show_date=show.date,
             show_name=show.name,
-            photo_url=photo_url,
-            notes=notes,
+            receipt_url=receipt_url,
+            notes=notes or "",
             payment_method=payment_method,
             payment_username=payment_username,
             amount=amount,
         )
-        reimbursement.save()
-        
-        return cls(success=True, reimbursement=reimbursement)
+
+        return cls(success=True, reimbursement=reimbursement, errors=None)

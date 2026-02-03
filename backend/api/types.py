@@ -6,6 +6,7 @@ from graphene_django.utils import camelize
 from common.exceptions import WrongUsage
 from shows.models import Member, Show, Round, Contact, Role, Reimbursement
 from users.models import User
+from .scalar import DecimalScalar
 
 
 class UserType(DjangoObjectType):
@@ -92,14 +93,15 @@ class ExpectedErrorType(Scalar):
 
 
 class ReimbursementType(DjangoObjectType):
+    amount = DecimalScalar()
     class Meta:
         model = Reimbursement
         fields = (
             "id",
             "show",
             "user",
-            "photo_url",
-            "notes",
+            "receipt_url",
+            "notes", 
             "payment_method",
             "payment_username",
             "amount",

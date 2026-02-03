@@ -1,10 +1,11 @@
 import json
-
 import graphene
 import graphql_jwt
 from django.dispatch import receiver
 from graphql_jwt.decorators import login_required, staff_member_required
 from graphql_jwt.refresh_token.signals import refresh_token_rotated
+from decimal import Decimal
+from .scalar import DecimalScalar
 
 from shows.models import Member, Show, Role
 from users.models import User
@@ -17,6 +18,7 @@ from .mutations import (
     RegisterMutation,
     UpdateProfileMutation,
     UpdatePasswordMutation,
+    SubmitReimbursementMutation,
 )
 from .types import UserType, MemberType, ShowType
 
@@ -102,6 +104,9 @@ class Mutation(graphene.ObjectType):
     logout_user = LogoutUserMutation.Field()
     send_password_reset_email = SendPasswordResetEmailMutation.Field()
     reset_password = ResetPasswordMutation.Field()
+    submit_reimbursement = SubmitReimbursementMutation.Field()
 
 
-schema = graphene.Schema(query=Query, mutation=Mutation)  # noqa
+schema = graphene.Schema(query=Query, mutation=Mutation, types=[DecimalScalar])  # noqa
+
+

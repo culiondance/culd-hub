@@ -3,14 +3,14 @@ import { gql } from "@apollo/client";
 export const SUBMIT_REIMBURSEMENT_MUTATION = gql`
   mutation SubmitReimbursement(
     $showId: ID!
-    $photoUrl: String!
+    $receiptUrl: String!
     $notes: String
     $paymentMethod: String!
-    $amount: Decimal!
+    $amount: String!
   ) {
     submitReimbursement(
       showId: $showId
-      photoUrl: $photoUrl
+      receiptUrl: $receiptUrl
       notes: $notes
       paymentMethod: $paymentMethod
       amount: $amount
@@ -22,7 +22,7 @@ export const SUBMIT_REIMBURSEMENT_MUTATION = gql`
         showName
         amount
         paymentMethod
-        photoUrl
+        receiptUrl
       }
     }
   }

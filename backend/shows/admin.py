@@ -94,12 +94,11 @@ class ReimbursementAdmin(admin.ModelAdmin):
         "user_last_name",
         "show_date",
         "show_name",
-        "receipt_link",
+        "receipt_url",
     ]
 
     actions = ["download_reimbursements_csv"]
 
-    # ✅ Clickable receipt link in admin
     def receipt_link(self, obj):
         if obj.receipt_url:
             return format_html(
@@ -111,7 +110,6 @@ class ReimbursementAdmin(admin.ModelAdmin):
     receipt_link.short_description = "Receipt"
 
     def download_reimbursements_csv(self, request, queryset):
-        """Generate and download CSV for selected reimbursements"""
         response = HttpResponse(content_type="text/csv")
         response["Content-Disposition"] = 'attachment; filename="reimbursements.csv"'
 
@@ -124,8 +122,8 @@ class ReimbursementAdmin(admin.ModelAdmin):
             "Payment Method",
             "Username",
             "Amount",
-            "Notes",
             "Receipt Link",
+            "Notes",
             "Submitted",
         ])
 
@@ -138,12 +136,13 @@ class ReimbursementAdmin(admin.ModelAdmin):
                 r.get_payment_method_display(),
                 r.payment_username,
                 r.amount,
-                r.notes,
                 r.receipt_url,
+                r.notes,
                 r.created_at.strftime("%Y-%m-%d %H:%M"),
             ])
 
         return response
+
 
 admin.site.register(Show, ShowAdmin)
 admin.site.register(Member, MemberAdmin)

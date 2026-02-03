@@ -78,12 +78,13 @@ export const ReimbursementModal: React.FC<ReimbursementModalProps> = ({
         message="Receipt Instructions"
         description={
           <>
-            Upload your receipt to the shared Google Drive.
+            Upload the picture of your receipt to the shared Google Drive.
             <br />
-            Create a folder with <b>your name</b>.
+            Create a folder with <b>your first and last name</b>.
             <br />
-            Right-click the file → <b>Get link</b> → set to
-            <b> “Anyone with the link can view”</b>.
+            You will be using this folder for all future reimbursements.
+            <br />
+            <b> “Make sure the link viewing settings are correct”</b>.
             <br />
             Paste the link below.
           </>
