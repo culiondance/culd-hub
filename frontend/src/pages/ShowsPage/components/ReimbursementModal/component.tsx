@@ -5,12 +5,11 @@ import {
   Input,
   Button,
   message,
-  Upload,
   InputNumber,
   Select,
+  Alert,
 } from "antd";
 import { useMutation } from "@apollo/client";
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { SUBMIT_REIMBURSEMENT_MUTATION } from "../../../../graphql/mutations";
 import { Show, User } from "../../../../types/types";
 import { handleApolloError } from "../../../../services/graphql";
@@ -32,7 +31,6 @@ export const ReimbursementModal: React.FC<ReimbursementModalProps> = ({
 }) => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
 
   const [submitReimbursement] = useMutation(SUBMIT_REIMBURSEMENT_MUTATION, {
     onCompleted: ({ submitReimbursement }) => {
@@ -45,36 +43,17 @@ export const ReimbursementModal: React.FC<ReimbursementModalProps> = ({
     onError: handleApolloError(),
   });
 
-  const uploadFileToFirebase = async (file: File): Promise<string> => {
-    const storage = getStorage();
-    const storageRef = ref(
-      storage,
-      `reimbursements/${user.id}/${Date.now()}-${file.name}`,
-    );
-    await uploadBytes(storageRef, file);
-    const url = await getDownloadURL(storageRef);
-    return url;
-  };
-
   const onFinish = async (values: any) => {
-    if (!file) {
-      message.error("Please upload a receipt photo.");
-      return;
-    }
-
     setLoading(true);
 
     try {
-      // Upload file and get the Firebase URL
-      const photoUrl = await uploadFileToFirebase(file);
-
       await submitReimbursement({
         variables: {
           showId: show.id,
-          photoUrl, // <-- send the URL, not base64
-          notes: values.notes,
+          receiptUrl: values.receiptUrl,
           paymentMethod: values.paymentMethod,
-          amount: parseFloat(values.amount), // convert to number
+          amount: values.amount,
+          notes: values.notes,
         },
       });
     } catch (err) {
@@ -87,23 +66,40 @@ export const ReimbursementModal: React.FC<ReimbursementModalProps> = ({
 
   return (
     <Modal
-      title={`Reimbursement Request - ${show.name}`}
+      title={`Reimbursement Request – ${show.name}`}
       visible={visible}
       onCancel={onClose}
       footer={null}
     >
-      <Form form={form} onFinish={onFinish}>
-        <Form.Item label="Photo (Receipt/Proof)">
-          <Upload
-            accept="image/png,image/jpeg"
-            maxCount={1}
-            beforeUpload={() => false} // prevent auto-upload
-            onChange={(info) =>
-              setFile(info.fileList[0]?.originFileObj || null)
-            }
-          >
-            <Button>Upload</Button>
-          </Upload>
+      <Alert
+        type="info"
+        showIcon
+        style={{ marginBottom: 16 }}
+        message="Receipt Instructions"
+        description={
+          <>
+            Upload your receipt to the shared Google Drive.
+            <br />
+            Create a folder with <b>your name</b>.
+            <br />
+            Right-click the file → <b>Get link</b> → set to
+            <b> “Anyone with the link can view”</b>.
+            <br />
+            Paste the link below.
+          </>
+        }
+      />
+
+      <Form form={form} layout="vertical" onFinish={onFinish}>
+        <Form.Item
+          name="receiptUrl"
+          label="Receipt Google Drive Link"
+          rules={[
+            { required: true, message: "Please paste the receipt link" },
+            { type: "url", message: "Please enter a valid URL" },
+          ]}
+        >
+          <Input placeholder="https://drive.google.com/..." />
         </Form.Item>
 
         <Form.Item
@@ -111,12 +107,12 @@ export const ReimbursementModal: React.FC<ReimbursementModalProps> = ({
           label="Payment Method"
           rules={[{ required: true }]}
         >
-          <Select>
+          <Select placeholder="Select payment method">
             <Select.Option value="venmo">
-              Venmo (@{user.venmoUsername})
+              Venmo (@{user.venmoUsername || "not set"})
             </Select.Option>
             <Select.Option value="zelle">
-              Zelle ({user.zelleUsername})
+              Zelle ({user.zelleUsername || "not set"})
             </Select.Option>
           </Select>
         </Form.Item>
@@ -124,17 +120,17 @@ export const ReimbursementModal: React.FC<ReimbursementModalProps> = ({
         <Form.Item
           name="amount"
           label="Amount to Reimburse"
-          rules={[{ required: true, type: "number" }]}
+          rules={[{ required: true }]}
         >
-          <InputNumber prefix="$" />
+          <InputNumber prefix="$" min={0} style={{ width: "100%" }} />
         </Form.Item>
 
-        <Form.Item name="notes" label="Notes">
+        <Form.Item name="notes" label="Notes (optional)">
           <TextArea rows={3} placeholder="Any additional info..." />
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" loading={loading}>
+          <Button type="primary" htmlType="submit" loading={loading} block>
             Submit Reimbursement
           </Button>
         </Form.Item>

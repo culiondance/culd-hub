@@ -375,8 +375,8 @@ class Reimbursement(models.Model):
     show_date = models.DateField()
     show_name = models.CharField(max_length=60)
     
-    # Store the Firebase URL instead of an uploaded image
-    photo_url = models.URLField(max_length=500)  # <-- changed from ImageField
+    # Store a Google Drive link for the receipt
+    receipt_url = models.URLField(max_length=500) 
     
     notes = models.TextField(blank=True)
     payment_method = models.PositiveSmallIntegerField(choices=PAYMENT_METHODS)
