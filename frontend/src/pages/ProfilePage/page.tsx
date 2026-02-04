@@ -176,12 +176,12 @@ const ProfilePage = () => {
             />
             <ProfileItem
               title="Zelle"
-              values={{ zelleUsername: user.zelle_username }}
+              values={{ zelleUsername: user.zelleUsername }}
               display={(values) => values.zelleUsername || "Not set"}
               input={
                 <Form.Item
                   name="zelleUsername"
-                  initialValue={user.zelle_username}
+                  initialValue={user.zelleUsername}
                   noStyle
                 >
                   <Input
@@ -194,12 +194,12 @@ const ProfilePage = () => {
             />
             <ProfileItem
               title="Venmo"
-              values={{ venmoUsername: user.venmo_username }}
+              values={{ venmoUsername: user.venmoUsername }}
               display={(values) => values.venmoUsername || "Not set"}
               input={
                 <Form.Item
                   name="venmoUsername"
-                  initialValue={user.venmo_username}
+                  initialValue={user.venmoUsername}
                   noStyle
                 >
                   <Input
