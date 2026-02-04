@@ -53,7 +53,7 @@ class RegisterMutation(DynamicArgsMixin, RegisterMixin, graphene.Mutation):
 
 class UpdateProfileMutation(DynamicArgsMixin, UpdateProfileMixin, graphene.Mutation):
     __doc__ = UpdateProfileMixin.__doc__
-    _args = ["first_name", "last_name", "email", "phone", "school", "class_year"]
+    _args = ["first_name", "last_name", "email", "phone", "school", "class_year", "venmo_username", "zelle_username"]
 
 
 class UpdatePasswordMutation(DynamicArgsMixin, UpdatePasswordMixin, graphene.Mutation):

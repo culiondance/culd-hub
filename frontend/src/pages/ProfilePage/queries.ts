@@ -24,6 +24,8 @@ export const UPDATE_PROFILE_MUTATION = gql`
     $firstName: String
     $lastName: String
     $phone: String
+    $venmoUsername: String
+    $zelleUsername: String
     $classYear: String
     $school: String
   ) {
@@ -32,6 +34,8 @@ export const UPDATE_PROFILE_MUTATION = gql`
       firstName: $firstName
       lastName: $lastName
       phone: $phone
+      venmoUsername: $venmoUsername
+      zelleUsername: $zelleUsername
       classYear: $classYear
       school: $school
     ) {
@@ -43,6 +47,8 @@ export const UPDATE_PROFILE_MUTATION = gql`
         lastName
         email
         phone
+        venmoUsername
+        zelleUsername
         member {
           id
           classYear

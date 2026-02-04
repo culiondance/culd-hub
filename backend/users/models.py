@@ -99,9 +99,4 @@ class User(AbstractUser):
         subject = "email/user_activated_subject.txt"
         return self.send(subject, template, email_context, *args, **kwargs)
 
-    def clean(self):
-        super().clean()
-        if not self.venmo_username and not self.zelle_username:
-            raise ValidationError(
-                _("You must provide either a Venmo username or a Zelle username.")
-            )
+ 

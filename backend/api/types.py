@@ -12,7 +12,8 @@ from .scalar import DecimalScalar
 class UserType(DjangoObjectType):
     class Meta:
         model = User
-        fields = ("id", "email", "first_name", "last_name", "phone", "member")
+        fields = ("id", "email", "first_name", "last_name", "phone", "member", "venmo_username", "zelle_username")
+        convert_choices_to_enum = False
 
 
 class MemberType(DjangoObjectType):

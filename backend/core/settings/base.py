@@ -61,6 +61,7 @@ GRAPHENE = {
     "MIDDLEWARE": [
         "graphql_jwt.middleware.JSONWebTokenMiddleware",
     ],
+    "CAMEL_CASE_QUERY": True,
 }
 
 AUTHENTICATION_BACKENDS = [

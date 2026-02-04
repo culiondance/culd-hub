@@ -14,6 +14,7 @@ import {
   PhoneOutlined,
   SmileOutlined,
   UserOutlined,
+  DollarOutlined,
 } from "@ant-design/icons";
 import { UserContext } from "../../context/UserContext";
 import Header from "../../components/Navigation";
@@ -169,6 +170,42 @@ const ProfilePage = () => {
                     placeholder="Phone number"
                     className={styles.fullWidthInput}
                     prefix={<PhoneOutlined />}
+                  />
+                </Form.Item>
+              }
+            />
+            <ProfileItem
+              title="Zelle"
+              values={{ zelleUsername: user.zelle_username }}
+              display={(values) => values.zelleUsername || "Not set"}
+              input={
+                <Form.Item
+                  name="zelleUsername"
+                  initialValue={user.zelle_username}
+                  noStyle
+                >
+                  <Input
+                    placeholder="zelle"
+                    className={styles.fullWidthInput}
+                    prefix={<DollarOutlined />}
+                  />
+                </Form.Item>
+              }
+            />
+            <ProfileItem
+              title="Venmo"
+              values={{ venmoUsername: user.venmo_username }}
+              display={(values) => values.venmoUsername || "Not set"}
+              input={
+                <Form.Item
+                  name="venmoUsername"
+                  initialValue={user.venmo_username}
+                  noStyle
+                >
+                  <Input
+                    placeholder="venmo"
+                    className={styles.fullWidthInput}
+                    prefix={<DollarOutlined />}
                   />
                 </Form.Item>
               }
